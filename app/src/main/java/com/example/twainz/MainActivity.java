@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import java.util.Vector;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -32,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
                             for (String station : tf.getStationList()) {
                                 Log.d("Debug", station); //Print the station names for testing purposes
                             }
+                        }
+                        Vector<train> trains = tf.getTrains("Dublin Pearse");
+
+                        if (!trains.isEmpty()) {
+                            for (train t : trains)
+                                t.printData();
                         }
                     }
                 });

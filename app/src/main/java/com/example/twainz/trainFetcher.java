@@ -16,6 +16,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class trainFetcher {
     private Vector<String> stationList;
+    private Vector<train> trainList;
 
     public trainFetcher(){
         Log.d("Debug", "Constructing trainFetcher");
@@ -25,6 +26,7 @@ public class trainFetcher {
         DocumentBuilder db = null;
         Document doc;
         stationList = new Vector<String>(); //Initialise the vector to contain the station names
+        trainList = new Vector<train>(); //Initialise the vector containing the train data for later use
 
         try {
             db = dbf.newDocumentBuilder();
@@ -43,8 +45,12 @@ public class trainFetcher {
 
                 //If the current node is an element
                 if (current.getNodeType() == Node.ELEMENT_NODE){
+
                     //Add the station name to the station name vector
-                    stationList.add(((Element)current).getElementsByTagName("StationDesc").item(0).getTextContent());
+                    stationList.add(((Element)current)
+                            .getElementsByTagName("StationDesc")
+                            .item(0)
+                            .getTextContent());
                 }
             }
         //Horrible error "handling"
@@ -60,6 +66,79 @@ public class trainFetcher {
     public Vector<String> getStationList(){
         return stationList;
     }
+
+    public Vector<train> getTrains(String station){
+
+        //Check if the station exists
+        if (stationList.contains(station)) {
+
+            if (trainList.isEmpty()) {
+
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                DocumentBuilder db = null;
+                Document doc;
+
+                try {
+                    db = dbf.newDocumentBuilder();
+                } catch (ParserConfigurationException e) {
+                    e.printStackTrace();
+                }
+
+
+                try {
+                    doc = db.parse(new URL("http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc=" + station).openStream());
+                    NodeList trains = doc.getElementsByTagName("objStationData"); //Convert the objStation objects into a NodeList
+
+                    //Loop through each element of the NodeList
+                    for (int i = 0; i < trains.getLength(); i++) {
+                        Node current = trains.item(i);
+
+                        //If the current node is an element
+                        if (current.getNodeType() == Node.ELEMENT_NODE) {
+                            String arrival = ((Element)current)
+                                    .getElementsByTagName("Scharrival")
+                                    .item(0)
+                                    .getTextContent();
+
+                            String delay = ((Element)current)
+                                    .getElementsByTagName("Late")
+                                    .item(0)
+                                    .getTextContent();
+
+                            String destination = ((Element)current)
+                                    .getElementsByTagName("Destination")
+                                    .item(0)
+                                    .getTextContent();
+
+                            String type = ((Element)current)
+                                    .getElementsByTagName("Traintype")
+                                    .item(0)
+                                    .getTextContent();
+
+                            train t = new train(0, arrival, Integer.valueOf(delay),
+                                    destination, type);
+
+                            trainList.add(t);
+                        }
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (SAXException e) {
+                    e.printStackTrace();
+                }
+
+
+                //http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc=Bayside
+            }
+            return trainList;
+
+        }
+        //If the station doesnt exist return a null vector
+        Log.e("Error", "Station name doesnt exist. Couldnt get data");
+        return null;
+    }
+
 
 
 }
