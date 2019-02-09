@@ -21,4 +21,8 @@ public class train {
         Log.d("Debug", this.type + ": " + this.arrivalTime + " + " + String.valueOf(this.delay));
     }
 
+    public String getArrivalTime(){
+        return arrivalTime;
+    }
+
 }

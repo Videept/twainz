@@ -1,5 +1,6 @@
 package com.example.twainz;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,8 +23,16 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.button:
                 Log.d("Debug", "Button 1 pressed");
+                trainFetcher tf = new trainFetcher();
+                if (!tf.getStationList().isEmpty()) {
+                    for (String station : tf.getStationList()) {
+                        Log.d("Debug", station); //Print the station names for testing purposes
+                    }
+                }
+                else
+                    Log.d("Debug", "Vector empty");
 
-                //Network operations cannot occur on the main thread
+/*                //Network operations cannot occur on the main thread
                 Thread networkThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -44,6 +53,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 networkThread.start();
+                */
+
+                Intent informationActivity = new Intent(this, stationInformationActivity.class);
+                informationActivity.putExtra("STATION", "Dublin Pearse");
+                startActivity(informationActivity);
+
+
 
                 break;
 

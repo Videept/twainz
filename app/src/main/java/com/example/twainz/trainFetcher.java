@@ -15,121 +15,153 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class trainFetcher {
-    private Vector<String> stationList;
+    private static Vector<String> stationList;
     private Vector<train> trainList;
+    private boolean fetched;
 
     public trainFetcher(){
         Log.d("Debug", "Constructing trainFetcher");
-
-        //Initialise the document build to build the document from the XML
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = null;
-        Document doc;
         stationList = new Vector<String>(); //Initialise the vector to contain the station names
         trainList = new Vector<train>(); //Initialise the vector containing the train data for later use
+        fetched = false;
 
-        try {
-            db = dbf.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            //Retrieve the XML from the URL
-            doc = db.parse(new URL("http://api.irishrail.ie/realtime/realtime.asmx/getAllStationsXML_WithStationType?StationType=D").openStream());
-            NodeList stations = doc.getElementsByTagName("objStation"); //Convert the objStation objects into a NodeList
-
-            //Loop through each element of the NodeList
-            for (int i = 0; i < stations.getLength(); i++){
-                Node current = stations.item(i);
-
-                //If the current node is an element
-                if (current.getNodeType() == Node.ELEMENT_NODE){
-
-                    //Add the station name to the station name vector
-                    stationList.add(((Element)current)
-                            .getElementsByTagName("StationDesc")
-                            .item(0)
-                            .getTextContent());
-                }
-            }
-        //Horrible error "handling"
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
-
+        this.getStationList();
 
     }
+
     //Getter for the station list vector
     public Vector<String> getStationList(){
+
+        if (stationList.isEmpty() && !fetched){
+            fetched = true;
+            Thread networkThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    //Initialise the document build to build the document from the XML
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder db = null;
+                    Document doc;
+
+                    try {
+                        db = dbf.newDocumentBuilder();
+                    } catch (ParserConfigurationException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+
+                        //Retrieve the XML from the URL
+                        doc = db.parse(new URL("http://api.irishrail.ie/realtime/realtime.asmx/getAllStationsXML_WithStationType?StationType=D").openStream());
+                        NodeList stations = doc.getElementsByTagName("objStation"); //Convert the objStation objects into a NodeList
+
+                        //Loop through each element of the NodeList
+                        for (int i = 0; i < stations.getLength(); i++){
+                            Node current = stations.item(i);
+
+                            //If the current node is an element
+                            if (current.getNodeType() == Node.ELEMENT_NODE){
+
+                                //Add the station name to the station name vector
+                                stationList.add(((Element)current)
+                                        .getElementsByTagName("StationDesc")
+                                        .item(0)
+                                        .getTextContent());
+                            }
+                        }
+                        //Horrible error "handling"
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (SAXException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("Debug", "Thread ran");
+                }
+
+            });
+            networkThread.start();
+            try {
+                networkThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         return stationList;
     }
 
-    public Vector<train> getTrains(String station){
+    public Vector<train> getTrains(final String station){
 
         //Check if the station exists
         if (stationList.contains(station)) {
 
             if (trainList.isEmpty()) {
 
-                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = null;
-                Document doc;
+                Thread networkThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
 
-                try {
-                    db = dbf.newDocumentBuilder();
-                } catch (ParserConfigurationException e) {
-                    e.printStackTrace();
-                }
+                        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                        DocumentBuilder db = null;
+                        Document doc;
+
+                        try {
+                            db = dbf.newDocumentBuilder();
+                        } catch (ParserConfigurationException e) {
+                            e.printStackTrace();
+                        }
 
 
-                try {
-                    doc = db.parse(new URL("http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc=" + station).openStream());
-                    NodeList trains = doc.getElementsByTagName("objStationData"); //Convert the objStation objects into a NodeList
+                        try {
+                            doc = db.parse(new URL("http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc=" + station).openStream());
+                            NodeList trains = doc.getElementsByTagName("objStationData"); //Convert the objStation objects into a NodeList
 
-                    //Loop through each element of the NodeList
-                    for (int i = 0; i < trains.getLength(); i++) {
-                        Node current = trains.item(i);
+                            //Loop through each element of the NodeList
+                            for (int i = 0; i < trains.getLength(); i++) {
+                                Node current = trains.item(i);
 
-                        //If the current node is an element
-                        if (current.getNodeType() == Node.ELEMENT_NODE) {
-                            String arrival = ((Element)current)
-                                    .getElementsByTagName("Scharrival")
-                                    .item(0)
-                                    .getTextContent();
+                                //If the current node is an element
+                                if (current.getNodeType() == Node.ELEMENT_NODE) {
+                                    String arrival = ((Element) current)
+                                            .getElementsByTagName("Scharrival")
+                                            .item(0)
+                                            .getTextContent();
 
-                            String delay = ((Element)current)
-                                    .getElementsByTagName("Late")
-                                    .item(0)
-                                    .getTextContent();
+                                    String delay = ((Element) current)
+                                            .getElementsByTagName("Late")
+                                            .item(0)
+                                            .getTextContent();
 
-                            String destination = ((Element)current)
-                                    .getElementsByTagName("Destination")
-                                    .item(0)
-                                    .getTextContent();
+                                    String destination = ((Element) current)
+                                            .getElementsByTagName("Destination")
+                                            .item(0)
+                                            .getTextContent();
 
-                            String type = ((Element)current)
-                                    .getElementsByTagName("Traintype")
-                                    .item(0)
-                                    .getTextContent();
+                                    String type = ((Element) current)
+                                            .getElementsByTagName("Traintype")
+                                            .item(0)
+                                            .getTextContent();
 
-                            train t = new train(0, arrival, Integer.valueOf(delay),
-                                    destination, type);
+                                    train t = new train(0, arrival, Integer.valueOf(delay),
+                                            destination, type);
 
-                            trainList.add(t);
+                                    trainList.add(t);
+                                }
+                            }
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (SAXException e) {
+                            e.printStackTrace();
                         }
                     }
+                });
+                networkThread.start();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (SAXException e) {
+                try {
+                    networkThread.join();
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-
-                //http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc=Bayside
             }
             return trainList;
 
