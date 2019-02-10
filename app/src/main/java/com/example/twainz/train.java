@@ -25,4 +25,12 @@ public class train {
         return arrivalTime;
     }
 
+    public String getDestination(){
+        return destination;
+    }
+
+    public int getDelay(){
+        return delay;
+    }
+
 }
