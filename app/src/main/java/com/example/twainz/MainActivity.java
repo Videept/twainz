@@ -24,42 +24,20 @@ public class MainActivity extends AppCompatActivity {
             case R.id.button:
                 Log.d("Debug", "Button 1 pressed");
                 trainFetcher tf = new trainFetcher();
-                if (!tf.getStationList().isEmpty()) {
-                    for (String station : tf.getStationList()) {
+                Vector<String> names = new Vector<String>();
+                names = tf.getStationList();
+
+                if (!names.isEmpty()) {
+                    for (String station : names) {
                         Log.d("Debug", station); //Print the station names for testing purposes
                     }
                 }
                 else
                     Log.d("Debug", "Vector empty");
 
-/*                //Network operations cannot occur on the main thread
-                Thread networkThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        trainFetcher tf = new trainFetcher();
-
-                        //Ensure the vector is not empty before creating an iterator
-                        if (!tf.getStationList().isEmpty()) {
-                            for (String station : tf.getStationList()) {
-                                Log.d("Debug", station); //Print the station names for testing purposes
-                            }
-                        }
-                        Vector<train> trains = tf.getTrains("Dublin Pearse");
-
-                        if (!trains.isEmpty()) {
-                            for (train t : trains)
-                                t.printData();
-                        }
-                    }
-                });
-                networkThread.start();
-                */
-
                 Intent informationActivity = new Intent(this, stationInformationActivity.class);
                 informationActivity.putExtra("STATION", "Dublin Pearse");
                 startActivity(informationActivity);
-
-
 
                 break;
 
