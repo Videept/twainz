@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.button2:
                 //Add code here
+                Twitter t = new Twitter();
+                t.printTweets();
                 Log.d("Debug", "Button 2 pressed");
                 break;
 

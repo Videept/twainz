@@ -9,9 +9,7 @@ import twitter4j.conf.ConfigurationBuilder;
 
 public class Twitter
 {
-    public static void main (String[] args) throws TwitterException
-
-    {
+    public void printTweets(){
         ConfigurationBuilder cb= new ConfigurationBuilder();
 
         cb.setDebugEnabled(true)
@@ -23,7 +21,12 @@ public class Twitter
         TwitterFactory tf=new TwitterFactory(cb.build());
         twitter4j.Twitter twitter= tf.getInstance();
 
-        List<Status> status= twitter.getHomeTimeline();
+        List<Status> status= null;
+        try {
+            status = twitter.getHomeTimeline();
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
 
         for(Status st: status)
         {
