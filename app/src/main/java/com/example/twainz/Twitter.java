@@ -10,28 +10,35 @@ import twitter4j.conf.ConfigurationBuilder;
 public class Twitter
 {
     public void printTweets(){
-        ConfigurationBuilder cb= new ConfigurationBuilder();
 
-        cb.setDebugEnabled(true)
-                .setOAuthConsumerKey("iypFrvmpfpAXgS1QfIxXIqF2j")
-                .setOAuthConsumerSecret("GPBBczBLLI4fSFifLZWUEWbzwJ5GBOjXRZMSWwQemtZcQuyfIX")
-                .setOAuthAccessToken("110455096-8et3Ywd5qAzeaWSlDxbKGXSxM8hlPaG8u3I8rWoO")
-                .setOAuthAccessTokenSecret("wjDaPE8dOfn5PhvezKEfnBBHjPt3F8HEMCZuwuyfhFR9V ");
+        Thread network = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ConfigurationBuilder cb= new ConfigurationBuilder();
 
-        TwitterFactory tf=new TwitterFactory(cb.build());
-        twitter4j.Twitter twitter= tf.getInstance();
+                cb.setDebugEnabled(true)
+                        .setOAuthConsumerKey("iypFrvmpfpAXgS1QfIxXIqF2j")
+                        .setOAuthConsumerSecret("GPBBczBLLI4fSFifLZWUEWbzwJ5GBOjXRZMSWwQemtZcQuyfIX")
+                        .setOAuthAccessToken("110455096-8et3Ywd5qAzeaWSlDxbKGXSxM8hlPaG8u3I8rWoO")
+                        .setOAuthAccessTokenSecret("wjDaPE8dOfn5PhvezKEfnBBHjPt3F8HEMCZuwuyfhFR9V ");
 
-        List<Status> status= null;
-        try {
-            status = twitter.getHomeTimeline();
-        } catch (TwitterException e) {
-            e.printStackTrace();
-        }
+                TwitterFactory tf=new TwitterFactory(cb.build());
+                twitter4j.Twitter twitter= tf.getInstance();
 
-        for(Status st: status)
-        {
-            System.out.println(st.getUser().getName()+"------"+st.getText());
-        }
+                List<Status> status = null;
+                try {
+                    status = twitter.getHomeTimeline();
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                }
+
+                for(Status st: status)
+                {
+                    System.out.println(st.getUser().getName()+"------"+st.getText());
+                }
+            }
+        });
+        network.start();
 
     }
 }
