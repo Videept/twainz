@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
                 else
                     Log.d("Debug", "Vector empty");
 
-                Intent informationActivity = new Intent(this, stationInformationActivity.class);
-                informationActivity.putExtra("STATION", "Dublin Pearse");
+                Intent informationActivity = new Intent(this, stationList.class);
+                //informationActivity.putExtra("STATION", "Dublin Pearse");
                 startActivity(informationActivity);
 
                 break;
