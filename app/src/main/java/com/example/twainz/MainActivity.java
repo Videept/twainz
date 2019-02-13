@@ -22,21 +22,7 @@ public class MainActivity extends AppCompatActivity {
         switch (v.getId()) {
 
             case R.id.button:
-                Log.d("Debug", "Button 1 pressed");
-                trainFetcher tf = new trainFetcher();
-                Vector<String> names = new Vector<String>();
-                names = tf.getStationList();
-
-                if (!names.isEmpty()) {
-                    for (String station : names) {
-                        Log.d("Debug", station); //Print the station names for testing purposes
-                    }
-                }
-                else
-                    Log.d("Debug", "Vector empty");
-
                 Intent informationActivity = new Intent(this, stationList.class);
-                //informationActivity.putExtra("STATION", "Dublin Pearse");
                 startActivity(informationActivity);
 
                 break;

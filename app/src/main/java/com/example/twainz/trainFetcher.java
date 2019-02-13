@@ -20,7 +20,6 @@ public class trainFetcher {
     private boolean fetched;
 
     public trainFetcher(){
-        Log.d("Debug", "Constructing trainFetcher");
         stationList = new Vector<String>(); //Initialise the vector to contain the station names
         trainList = new Vector<train>(); //Initialise the vector containing the train data for later use
         fetched = false;
