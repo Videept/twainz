@@ -5,8 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import java.util.Vector;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,50 +25,18 @@ public class MainActivity extends AppCompatActivity {
         switch (v.getId()) {
 
             case R.id.button:
-                Log.d("Debug", "Button 1 pressed");
-                trainFetcher tf = new trainFetcher();
-                if (!tf.getStationList().isEmpty()) {
-                    for (String station : tf.getStationList()) {
-                        Log.d("Debug", station); //Print the station names for testing purposes
-                    }
-                }
-                else
-                    Log.d("Debug", "Vector empty");
-
-/*                //Network operations cannot occur on the main thread
-                Thread networkThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        trainFetcher tf = new trainFetcher();
-
-                        //Ensure the vector is not empty before creating an iterator
-                        if (!tf.getStationList().isEmpty()) {
-                            for (String station : tf.getStationList()) {
-                                Log.d("Debug", station); //Print the station names for testing purposes
-                            }
-                        }
-                        Vector<train> trains = tf.getTrains("Dublin Pearse");
-
-                        if (!trains.isEmpty()) {
-                            for (train t : trains)
-                                t.printData();
-                        }
-                    }
-                });
-                networkThread.start();
-                */
-
-                Intent informationActivity = new Intent(this, stationInformationActivity.class);
-                informationActivity.putExtra("STATION", "Dublin Pearse");
+                Intent informationActivity = new Intent(this, stationList.class);
                 startActivity(informationActivity);
-
-
 
                 break;
 
             case R.id.button2:
                 //Add code here
-                Log.d("Debug", "Button 2 pressed");
+                Intent twitter = new Intent(this, Twitter.class);
+                startActivity(twitter);
+                /*Twitter t = new Twitter();
+                t.printTweets();
+                Log.d("Debug", "Button 2 pressed");*/
                 break;
 
             case R.id.button3:

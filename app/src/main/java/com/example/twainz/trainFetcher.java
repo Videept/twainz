@@ -20,7 +20,6 @@ public class trainFetcher {
     private boolean fetched;
 
     public trainFetcher(){
-        Log.d("Debug", "Constructing trainFetcher");
         stationList = new Vector<String>(); //Initialise the vector to contain the station names
         trainList = new Vector<train>(); //Initialise the vector containing the train data for later use
         fetched = false;
@@ -112,7 +111,7 @@ public class trainFetcher {
 
 
                         try {
-                            doc = db.parse(new URL("http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc=" + station).openStream());
+                            doc = db.parse(new URL("http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc=" + station + "&NumMins=120").openStream());
                             NodeList trains = doc.getElementsByTagName("objStationData"); //Convert the objStation objects into a NodeList
 
                             //Loop through each element of the NodeList

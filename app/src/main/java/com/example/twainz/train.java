@@ -33,4 +33,8 @@ public class train {
         return delay;
     }
 
+    public String getType(){
+        return type;
+    }
+
 }
