@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 public class Twitter extends AppCompatActivity {
     private TableLayout twitterlayout;
+    private List<Status> status;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,17 +25,13 @@ public class Twitter extends AppCompatActivity {
         //Extract the station name from the intent which started the activity
         Intent cause = getIntent();
         String twitter = cause.getStringExtra("TWITTER");
+        printTweets();
 
-
+        TextView textView = (TextView) findViewById(R.id.twitterListLayout);
 
 
 
     }
-        // Get the Intent that started this activity and extract the string
-
-
-
-
 
     public void printTweets(){
 
@@ -52,7 +49,7 @@ public class Twitter extends AppCompatActivity {
                 TwitterFactory tf=new TwitterFactory(cb.build());
                 twitter4j.Twitter twitter= tf.getInstance();
 
-                List<Status> status = null;
+
                 try {
                     status = twitter.getHomeTimeline();
                 } catch (TwitterException e) {
@@ -66,11 +63,16 @@ public class Twitter extends AppCompatActivity {
                 /*public void gotomain(View view){
                     Intent newActivity = new Intent(this, MainActivity.class)
                 }*/
-                TextView textView = (TextView) findViewById(R.id.twitterListLayout);
-                textView.setMovementMethod(new ScrollingMovementMethod());
+
             }
         });
         network.start();
+
+        try {
+            network.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 }
