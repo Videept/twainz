@@ -15,7 +15,6 @@
         android:text="Twitter Feed"
         android:textColor="@android:color/holo_blue_light"
         android:textSize="24sp"
-        app:fontFamily="@font/russo_one"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.684"
         app:layout_constraintStart_toStartOf="parent"
