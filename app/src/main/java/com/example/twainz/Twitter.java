@@ -28,7 +28,7 @@ public class Twitter extends AppCompatActivity {
         String combinedTweets = "";
 
         for (Status s : status){
-            combinedTweets = combinedTweets + s.getCreatedAt()+":" + s.getText() + "\n";
+            combinedTweets = combinedTweets + s.getCreatedAt()+":" + s.getText() + "\n\n\n";
         }
 
         textView.setText(combinedTweets);
