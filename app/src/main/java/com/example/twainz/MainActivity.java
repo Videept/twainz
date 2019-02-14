@@ -5,8 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import java.util.Vector;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,9 +32,11 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.button2:
                 //Add code here
-                Twitter t = new Twitter();
+                Intent twitter = new Intent(this, Twitter.class);
+                startActivity(twitter);
+                /*Twitter t = new Twitter();
                 t.printTweets();
-                Log.d("Debug", "Button 2 pressed");
+                Log.d("Debug", "Button 2 pressed");*/
                 break;
 
             case R.id.button3:

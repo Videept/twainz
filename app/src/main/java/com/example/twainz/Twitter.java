@@ -7,8 +7,35 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class Twitter
-{
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
+import android.widget.TableLayout;
+import android.widget.TextView;
+
+public class Twitter extends AppCompatActivity {
+    private TableLayout twitterlayout;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.twitter_display);
+
+        //Extract the station name from the intent which started the activity
+        Intent cause = getIntent();
+        String twitter = cause.getStringExtra("TWITTER");
+
+
+
+
+
+    }
+        // Get the Intent that started this activity and extract the string
+
+
+
+
+
     public void printTweets(){
 
         Thread network = new Thread(new Runnable() {
@@ -36,6 +63,11 @@ public class Twitter
                 {
                     System.out.println(st.getUser().getName()+"------"+st.getText());
                 }
+                /*public void gotomain(View view){
+                    Intent newActivity = new Intent(this, MainActivity.class)
+                }*/
+                TextView textView = (TextView) findViewById(R.id.twitterListLayout);
+                textView.setMovementMethod(new ScrollingMovementMethod());
             }
         });
         network.start();
