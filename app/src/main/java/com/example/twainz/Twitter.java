@@ -22,16 +22,14 @@ public class Twitter extends AppCompatActivity {
         status = new ArrayList<Status>();
 
         //Extract the station name from the intent which started the activity
-        Intent cause = getIntent();
-        String twitter = cause.getStringExtra("TWITTER");
         printTweets();
 
-        TextView textView = (TextView) findViewById(R.id.twitterListLayout);
+        TextView textView = findViewById(R.id.twitterListLayout);
 
         String combinedTweets = "";
 
         for (Status s : status){
-            combinedTweets = combinedTweets + s.getText().toString() + "\n";
+            combinedTweets = combinedTweets + s.getText() + "\n";
         }
 
         textView.setText(combinedTweets);
