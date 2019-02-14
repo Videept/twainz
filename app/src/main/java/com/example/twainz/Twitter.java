@@ -1,5 +1,6 @@
 package com.example.twainz;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import twitter4j.Status;
@@ -21,6 +22,7 @@ public class Twitter extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.twitter_display);
+        status = new ArrayList<Status>();
 
         //Extract the station name from the intent which started the activity
         Intent cause = getIntent();
@@ -29,7 +31,13 @@ public class Twitter extends AppCompatActivity {
 
         TextView textView = (TextView) findViewById(R.id.twitterListLayout);
 
+        String combinedTweets = "";
 
+        for (Status s : status){
+            combinedTweets = combinedTweets + s.getText().toString() + "\n";
+        }
+
+        textView.setText(combinedTweets);
 
     }
 
@@ -44,7 +52,7 @@ public class Twitter extends AppCompatActivity {
                         .setOAuthConsumerKey("iypFrvmpfpAXgS1QfIxXIqF2j")
                         .setOAuthConsumerSecret("GPBBczBLLI4fSFifLZWUEWbzwJ5GBOjXRZMSWwQemtZcQuyfIX")
                         .setOAuthAccessToken("110455096-8et3Ywd5qAzeaWSlDxbKGXSxM8hlPaG8u3I8rWoO")
-                        .setOAuthAccessTokenSecret("wjDaPE8dOfn5PhvezKEfnBBHjPt3F8HEMCZuwuyfhFR9V ");
+                        .setOAuthAccessTokenSecret("wjDaPE8dOfn5PhvezKEfnBBHjPt3F8HEMCZuwuyfhFR9V");
 
                 TwitterFactory tf=new TwitterFactory(cb.build());
                 twitter4j.Twitter twitter= tf.getInstance();
