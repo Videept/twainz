@@ -62,9 +62,6 @@ public class Twitter extends AppCompatActivity {
                 {
                     System.out.println(st.getUser().getName()+"------"+st.getText());
                 }
-                /*public void gotomain(View view){
-                    Intent newActivity = new Intent(this, MainActivity.class)
-                }*/
 
             }
         });
