@@ -11,12 +11,9 @@ import twitter4j.conf.ConfigurationBuilder;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 public class Twitter extends AppCompatActivity {
-    private TableLayout twitterlayout;
     private List<Status> status;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
