@@ -34,7 +34,7 @@ public class stationList extends AppCompatActivity {
         names = new Vector<String>();
         names = tf.getStationList();
         
-        Collections.sort(vector);
+        Collections.sort(names);
 
         ArrayList<String> list = new ArrayList<String>(names);
 

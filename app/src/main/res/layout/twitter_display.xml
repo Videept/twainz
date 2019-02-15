@@ -43,7 +43,8 @@
             android:layout_height="wrap_content"
             android:isScrollContainer="true"
             android:orientation="vertical"
-            android:stretchColumns="*">
+            android:stretchColumns="*"
+            android:textSize="15dp">
 
         </TextView>
     </ScrollView>
