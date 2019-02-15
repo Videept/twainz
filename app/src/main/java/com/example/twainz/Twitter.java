@@ -66,7 +66,6 @@ public class Twitter extends AppCompatActivity {
                 {
                     System.out.println(st.getUser().getName()+"------"+st.getText());
                 }
-
             }
         });
         network.start();
