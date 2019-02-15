@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import java.util.Collections;
 
 import org.w3c.dom.Text;
 
@@ -32,6 +33,8 @@ public class stationList extends AppCompatActivity {
         trainFetcher tf = new trainFetcher();
         names = new Vector<String>();
         names = tf.getStationList();
+        
+        Collections.sort(vector);
 
         ArrayList<String> list = new ArrayList<String>(names);
 
