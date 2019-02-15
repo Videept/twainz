@@ -1,5 +1,6 @@
 package com.example.twainz;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +25,15 @@ public class Twitter extends AppCompatActivity {
         printTweets();
 
         TextView textView = findViewById(R.id.twitterListLayout);
+        //String tweetList[20];
 
         String combinedTweets = "";
 
         for (Status s : status){
-            combinedTweets = combinedTweets + s.getCreatedAt()+":" + s.getText() + "\n\n" + "-----------------------------------------------------------------------------------"+ "\n\n";
+            String newTweet = s.getCreatedAt().toString();
+            String[] DateParts = newTweet.split(" ");
+            String[] TimeParts = DateParts[3].split(":");
+            combinedTweets = combinedTweets + s.getText() + "\n\n" + TimeParts[0] + ":" + TimeParts[1] + " " + DateParts[0] + " " + DateParts[2]+ "\n\n" + "-----------------------------------------------------------------------------------" + "\n\n";
         }
 
         textView.setText(combinedTweets);
