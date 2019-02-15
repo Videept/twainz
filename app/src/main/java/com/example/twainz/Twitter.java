@@ -37,7 +37,6 @@ public class Twitter extends AppCompatActivity {
         }
 
         textView.setText(combinedTweets);
-
     }
 
     public void printTweets(){
