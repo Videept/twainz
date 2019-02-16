@@ -98,8 +98,9 @@ public class MainActivity extends AppCompatActivity{
                     return "Stations";
                 case 1:
                     return "Twitter";
+                default:
+                    return null;
             }
-            return null;
         }
 
     }
