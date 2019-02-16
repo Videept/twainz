@@ -16,8 +16,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class trainFetcher {
     private static Vector<String> stationList;
-    private Vector<train> trainList;
+    static private Vector<train> trainList;
     private boolean fetched;
+    static private String stationQuery;
 
     public trainFetcher(){
         stationList = new Vector<String>(); //Initialise the vector to contain the station names
@@ -27,6 +28,13 @@ public class trainFetcher {
         this.getStationList();
 
     }
+    void setStationQuery(String stationQuery_){
+        stationQuery = new String(stationQuery_);
+    }
+    String getStationQuery(){
+        return stationQuery;
+    }
+
 
     //Getter for the station list vector
     public Vector<String> getStationList(){
@@ -88,12 +96,13 @@ public class trainFetcher {
         return stationList;
     }
 
-    public Vector<train> getTrains(final String station){
+    public Vector<train> getTrains(){
 
         //Check if the station exists
-        if (stationList.contains(station)) {
+        if (stationList.contains(stationQuery)) {
 
             if (trainList.isEmpty()) {
+                Log.d("d", "populating");
 
                 Thread networkThread = new Thread(new Runnable() {
                     @Override
@@ -111,7 +120,7 @@ public class trainFetcher {
 
 
                         try {
-                            doc = db.parse(new URL("http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc=" + station + "&NumMins=120").openStream());
+                            doc = db.parse(new URL("http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc=" + stationQuery + "&NumMins=90").openStream());
                             NodeList trains = doc.getElementsByTagName("objStationData"); //Convert the objStation objects into a NodeList
 
                             //Loop through each element of the NodeList
@@ -173,5 +182,7 @@ public class trainFetcher {
 
 
 }
+
+
 
 

@@ -1,10 +1,9 @@
 package com.example.twainz;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,43 +11,50 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import java.util.Collections;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class stationList extends AppCompatActivity {
+public class stationList extends Fragment  {
     private ListView mListView;
     private Vector<String> names;
+    private View rootView;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.activity_list, container, false);
 
-        mListView = (ListView) findViewById(R.id.listView);
+        mListView = rootView.findViewById(R.id.listView);
 
         trainFetcher tf = new trainFetcher();
         names = new Vector<String>();
         names = tf.getStationList();
-        
-        Collections.sort(names);
 
         ArrayList<String> list = new ArrayList<String>(names);
 
-        StringAdapter adapter = new StringAdapter(this, list);
+        StringAdapter adapter = new StringAdapter(rootView.getContext(), list);
 
         mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                trainFetcher tf = new trainFetcher();
+                String search = tf.getStationList().get(Integer.valueOf(position));
+                tf.setStationQuery(search);
 
+                android.support.v4.app.FragmentManager childManager = getActivity().getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   //Begin the fragment change
+                Fragment fragment = new stationInformationActivity();   //Initialise the new fragment
+                fragmentTransaction.replace(R.id.listConstraintLayout, fragment);   //Replace listConstraintLayout with the new fragment
+                fragmentTransaction.addToBackStack(null);   //Add the previous fragment to the stack so the back button works
+                fragmentTransaction.commit();   //Complete the fragment transaction
+            }
+        });
+
+        return rootView;
     }
-    public void onClick(View v){
-        //Use the tag to retrieve the button which caused the callback and start a new activity to display the data
-        Intent informationActivity = new Intent(this, stationInformationActivity.class);
-        informationActivity.putExtra("STATION", names.get(Integer.valueOf(v.getTag().toString())));
-        startActivity(informationActivity);
-    }
+
+
 }
 //Custom adapter class to ensure new buttons are uniquely tagged so UI callbacks can be processed correctly
 class StringAdapter extends ArrayAdapter<String> {
@@ -66,7 +72,7 @@ class StringAdapter extends ArrayAdapter<String> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_view, parent, false);
         }
 
-        TextView t = convertView.findViewById(R.id.textView1);
+        TextView t = convertView.findViewById(R.id.stationButton);
         t.setText(station);
         t.setTag(position); //Tag the button with it's position in the list
 

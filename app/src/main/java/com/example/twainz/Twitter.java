@@ -9,22 +9,27 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class Twitter extends AppCompatActivity {
+public class Twitter extends Fragment {
     private List<Status> status;
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.twitter_display);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.twitter_display, container, false);
         status = new ArrayList<Status>();
 
         //Extract the station name from the intent which started the activity
         printTweets();
 
-        TextView textView = findViewById(R.id.twitterListLayout);
+        TextView textView = rootView.findViewById(R.id.twitterListLayout);
         //String tweetList[20];
 
         String combinedTweets = "";
@@ -37,6 +42,7 @@ public class Twitter extends AppCompatActivity {
         }
 
         textView.setText(combinedTweets);
+        return rootView;
     }
 
     public void printTweets(){
