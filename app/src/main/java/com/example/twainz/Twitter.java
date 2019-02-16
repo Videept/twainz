@@ -38,7 +38,7 @@ public class Twitter extends Fragment {
             String newTweet = s.getCreatedAt().toString();
             String[] DateParts = newTweet.split(" ");
             String[] TimeParts = DateParts[3].split(":");
-            combinedTweets = combinedTweets + s.getText() + "\n\n" + TimeParts[0] + ":" + TimeParts[1] + " " + DateParts[0] + " " + DateParts[2]+ "\n\n" + "-----------------------------------------------------------------------------------" + "\n\n";
+            combinedTweets = combinedTweets + TimeParts[0] + ":" + TimeParts[1] + " " + DateParts[0] + " " + DateParts[2]+ "\n\n" +s.getText()+ "\n\n"+"------------------------------------------------------------------------------" + "\n\n";
         }
 
         textView.setText(combinedTweets);
