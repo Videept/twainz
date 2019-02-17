@@ -50,8 +50,25 @@
             android:isScrollContainer="true"
             android:orientation="vertical"
             android:stretchColumns="*"
-            android:textSize="15dp"></TextView>
+            android:textSize="15sp"/>
     </ScrollView>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="94dp"
+        android:layout_height="57dp"
+        android:src="@drawable/square_twitter_317723"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="94dp"
+        android:layout_height="57dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/square_twitter_317723"
+        tools:layout_editor_absoluteY="0dp" />
 
 
 </android.support.constraint.ConstraintLayout>
