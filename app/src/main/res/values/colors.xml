@@ -3,4 +3,6 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#6AF0DE</color>
+    <color name="current_station">#c61792</color>
+    <color name="soft_white">#fcedf7</color>
 </resources>
