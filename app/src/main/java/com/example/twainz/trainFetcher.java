@@ -23,7 +23,6 @@ public class trainFetcher {
     public trainFetcher(){
         stationList = new Vector<String>(); //Initialise the vector to contain the station names
         trainList = new Vector<train>(); //Initialise the vector containing the train data for later use
-        fetched = false;
 
         this.getStationList();
 
@@ -35,12 +34,78 @@ public class trainFetcher {
         return stationQuery;
     }
 
+    public int getLineRun(final Vector<String> stations, final String trainID, final String date, final String currentStation){
+        int location = 0;
+
+        if (stations.isEmpty()){
+            Thread networkThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    //Initialise the document build to build the document from the XML
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder db = null;
+                    Document doc;
+
+                    try {
+                        db = dbf.newDocumentBuilder();
+                    } catch (ParserConfigurationException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+
+                        //Retrieve the XML from the URL
+                        doc = db.parse(new URL("http://api.irishrail.ie/realtime/realtime.asmx/getTrainMovementsXML?TrainId=" + trainID + "&TrainDate=" + date).openStream());
+                        NodeList s = doc.getElementsByTagName("objTrainMovements"); //Convert the objStation objects into a NodeList
+
+                        //Loop through each element of the NodeList
+                        for (int i = 0; i < s.getLength(); i++){
+                            Node current = s.item(i);
+
+                            //If the current node is an element
+                            if (current.getNodeType() == Node.ELEMENT_NODE){
+
+                                //Add the station name to the station name vector
+                                stations.add(((Element)current)
+                                        .getElementsByTagName("LocationFullName")
+                                        .item(0)
+                                        .getTextContent());
+
+                            }
+                        }
+                        //Horrible error "handling"
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (SAXException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("Debug", "Thread ran");
+                }
+
+            });
+            networkThread.start();
+            try {
+                networkThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        for (String s : stations) {
+            location++;
+            if (s.equals(currentStation))
+                return location;
+
+        }
+        return location;
+
+    }
 
     //Getter for the station list vector
     public Vector<String> getStationList(){
 
-        if (stationList.isEmpty() && !fetched){
-            fetched = true;
+        if (stationList.isEmpty()){
+
             Thread networkThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -101,8 +166,8 @@ public class trainFetcher {
         //Check if the station exists
         if (stationList.contains(stationQuery)) {
 
-            if (trainList.isEmpty()) {
-                Log.d("d", "populating");
+            if (!trainList.isEmpty())
+                trainList.clear();
 
                 Thread networkThread = new Thread(new Runnable() {
                     @Override
@@ -129,28 +194,50 @@ public class trainFetcher {
 
                                 //If the current node is an element
                                 if (current.getNodeType() == Node.ELEMENT_NODE) {
-                                    String arrival = ((Element) current)
-                                            .getElementsByTagName("Scharrival")
+                                    train t = new train();
+
+                                    String buffer = ((Element) current)
+                                            .getElementsByTagName("Schdepart")
                                             .item(0)
                                             .getTextContent();
 
-                                    String delay = ((Element) current)
+                                    if (buffer.equals("00:00")){
+                                        buffer = ((Element) current)
+                                                .getElementsByTagName("Scharrival")
+                                                .item(0)
+                                                .getTextContent();
+                                    }
+
+                                    t.setArrivalTime(buffer);
+
+                                    buffer = ((Element) current)
                                             .getElementsByTagName("Late")
                                             .item(0)
                                             .getTextContent();
 
-                                    String destination = ((Element) current)
+                                    t.setDelay(Integer.valueOf(buffer));
+
+                                    buffer = ((Element) current)
                                             .getElementsByTagName("Destination")
                                             .item(0)
                                             .getTextContent();
 
-                                    String type = ((Element) current)
+                                    t.setDestination(buffer);
+
+                                    buffer = ((Element) current)
                                             .getElementsByTagName("Traintype")
                                             .item(0)
                                             .getTextContent();
 
-                                    train t = new train(0, arrival, Integer.valueOf(delay),
-                                            destination, type);
+                                    t.setType(buffer);
+
+                                    buffer = ((Element) current)
+                                            .getElementsByTagName("Traincode")
+                                            .item(0)
+                                            .getTextContent();
+
+                                    t.setId(buffer);
+
 
                                     trainList.add(t);
                                 }
@@ -170,7 +257,7 @@ public class trainFetcher {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
+
             return trainList;
 
         }

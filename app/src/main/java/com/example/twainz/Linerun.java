@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,24 +21,22 @@ public class Linerun extends Fragment {
     private static int height_dp;
     private static int width_dp;
 
+    final static String DATA_RECEIVE = "data_receive";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_linerun, container, false);
+        trainFetcher tf = new trainFetcher();
 
-        //testing variables:
-        String  current_station_name = "placeholder"; // pass this from the stationinformationactivity onclick
-        String[] test0 =new String[]{"station0","station1","station2", "station3", "stations4", "station5", "station6",
-                "station7","station8","station9", "station10", "stations11", "station12", "station13",
-                "station14","station15","station16", "station17","station18","station19", "station20"};
-        String[] test1 = new String[]{"station0","station1","station2", "station3", "stations4", "station5", "station6"};
+        Bundle args = getArguments();
+        train t = tf.getTrains().get(Integer.valueOf(args.getString(DATA_RECEIVE)));
 
-        Vector<String> stations_on_route = new Vector<String>(Arrays.asList(test0));
-        //get this from wherever - some function to return stations on the route in order start -> end
+        Vector<String> stations = new Vector<>();
 
-        int current_station = 17; //stations_on_route.indexOf(current_station_name);  //current_station on the route
+        int currentStation = tf.getLineRun(stations, t.getId(), t.getDate(), tf.getStationQuery());
 
-        drawLinerun(stations_on_route, current_station );
+        drawLinerun(stations, currentStation);
 
         return rootView;
     }
