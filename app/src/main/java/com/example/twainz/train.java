@@ -11,13 +11,15 @@ public class train {
     private String id;
     private String date;
 
-    public train(int platform_, String arrivalTime_, int delay_, String destination_, String type_, String id_){
+    public train(int platform_, String arrivalTime_, int delay_, String destination_, String type_, String id_, String date_){
         this.platform = platform_;
         this.arrivalTime = arrivalTime_;
         this.delay = delay_;
         this.destination = destination_;
         this.type = type_;
         this.id = id_;
+        this.date = date_;
+
     }
 
     public train(){}

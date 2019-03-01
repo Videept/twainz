@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import java.util.Arrays;
 import java.util.Vector;
 
 public class Linerun extends Fragment {
@@ -33,9 +32,11 @@ public class Linerun extends Fragment {
         train t = tf.getTrains().get(Integer.valueOf(args.getString(DATA_RECEIVE)));
 
         Vector<String> stations = new Vector<>();
-
+        TextView display = rootView.findViewById(R.id.textView);
+        String display_text = t.getType() + " to " + t.getDestination();
+        display.setText(display_text);
         int currentStation = tf.getLineRun(stations, t.getId(), t.getDate(), tf.getStationQuery());
-
+        //Log.d("d_tag", "current station is " + String.valueOf(currentStation));
         drawLinerun(stations, currentStation);
 
         return rootView;

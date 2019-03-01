@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity{
                 case 0:
                     return new stationList();
                 case 1:
-                    return new  Twitter();
+                    return new Twitter();
                 default:
                     return null;
             }

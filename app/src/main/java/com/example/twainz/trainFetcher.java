@@ -54,9 +54,11 @@ public class trainFetcher {
                     }
 
                     try {
-
+                        String parse_date = date.replace(' ', '+');
+                        String urlrequest = "http://api.irishrail.ie/realtime/realtime.asmx/getTrainMovementsXML?TrainId=" +
+                                trainID.substring(0, trainID.length() -1) + "&" + "TrainDate=" + parse_date;
                         //Retrieve the XML from the URL
-                        doc = db.parse(new URL("http://api.irishrail.ie/realtime/realtime.asmx/getTrainMovementsXML?TrainId=" + trainID + "&TrainDate=" + date).openStream());
+                        doc = db.parse(new URL(urlrequest).openStream());
                         NodeList s = doc.getElementsByTagName("objTrainMovements"); //Convert the objStation objects into a NodeList
 
                         //Loop through each element of the NodeList
@@ -77,8 +79,11 @@ public class trainFetcher {
                         //Horrible error "handling"
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Log.d("d_tag", "caught error" + e.toString());
                     } catch (SAXException e) {
                         e.printStackTrace();
+                        Log.d("d_tag", "caught error" + e.toString());
+
                     }
                     Log.d("Debug", "Thread ran");
                 }
@@ -235,8 +240,14 @@ public class trainFetcher {
                                             .getElementsByTagName("Traincode")
                                             .item(0)
                                             .getTextContent();
-
                                     t.setId(buffer);
+
+                                    buffer = ((Element) current)
+                                            .getElementsByTagName("Traindate")
+                                            .item(0)
+                                            .getTextContent();
+
+                                    t.setDate(buffer);
 
 
                                     trainList.add(t);
