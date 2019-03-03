@@ -136,12 +136,11 @@ public class trainFetcher {
             }
         }
         Date time_date = new Date();
-        int curr_hour = time_date.getHours(); //time_date.toInstant().atZone(ZoneId.systemDefault()).getHour();
-        int curr_min = time_date.getMinutes(); //time_date.toInstant().atZone(ZoneId.systemDefault()).getMinute();
+        int curr_hour = time_date.getHours();
+        int curr_min = time_date.getMinutes();
         for (int i = 0; i < stations.size();i++) {
 
             if (compareTimes(stations.get(i).arrival_time, curr_hour,curr_min)){
-                Log.d("d_tag", currentStation +"  "+String.valueOf(stations.get(i).location));
                 return location;
             }
             location++;
@@ -158,7 +157,6 @@ public class trainFetcher {
             return (curr_hour *60 + curr_min < 60*arrival_time[0] + arrival_time[1]);
         }
         return (curr_hour *60 + curr_min < 60*(24+arrival_time[0]) + arrival_time[1]);
-
 
     }
 

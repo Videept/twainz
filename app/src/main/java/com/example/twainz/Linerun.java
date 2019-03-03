@@ -105,11 +105,6 @@ class LinerunAdapter extends ArrayAdapter<LinerunStation> {
             tv.setText("- on time");
         }
 
-
-
-
-
-
         ConstraintLayout flayout = convertView.findViewById(R.id.bar_foreground);
         ConstraintLayout blayout = convertView.findViewById(R.id.bar_background);
         int max_height = blayout.getMaxHeight();
