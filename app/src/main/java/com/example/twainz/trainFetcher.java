@@ -1,5 +1,8 @@
 package com.example.twainz;
 
+import android.annotation.TargetApi;
+import android.icu.text.SimpleDateFormat;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import org.w3c.dom.Document;
@@ -9,6 +12,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,7 +41,7 @@ public class trainFetcher {
         return stationQuery;
     }
 
-    public int getLineRun(final Vector<String> stations, final String trainID, final String date, final String currentStation){
+    public int getLineRun(final Vector<LinerunStation> stations, final String trainID, final String date, final String currentStation){
         int location = 0;
 
         if (stations.isEmpty()){
@@ -67,22 +74,54 @@ public class trainFetcher {
 
                             //If the current node is an element
                             if (current.getNodeType() == Node.ELEMENT_NODE){
+                                //create a new LinerunStation to add to the station vector
+                                LinerunStation new_station = new LinerunStation();
 
-                                //Add the station name to the station name vector
-                                stations.add(((Element)current)
+                                new_station.location =
+                                        ((Element)current)
                                         .getElementsByTagName("LocationFullName")
                                         .item(0)
-                                        .getTextContent());
+                                        .getTextContent();
+                                if( i == 0){
+                                    new_station.delay = 0;
+                                    String raw =
+                                            ((Element) current)
+                                            .getElementsByTagName("ExpectedDeparture")
+                                            .item(0)
+                                            .getTextContent();
+                                    new_station.arrival_time[0] = Integer.valueOf(raw.substring(0, 2));
+                                    new_station.arrival_time[1] = Integer.valueOf(raw.substring(3, 5));
+                                }else {
+                                    String raw_scheduledArrival =
+                                            ((Element) current)   // in the form 01:34:67
+                                                    .getElementsByTagName("ScheduledArrival")
+                                                    .item(0)
+                                                    .getTextContent();
+                                    int h_sch = Integer.valueOf(raw_scheduledArrival.substring(0, 2));
+                                    int m_sch = Integer.valueOf(raw_scheduledArrival.substring(3, 5));
+                                    String raw_expectedArrival =
+                                            ((Element) current)    // in the form 01:34:67
+                                                    .getElementsByTagName("ExpectedArrival")
+                                                    .item(0)
+                                                    .getTextContent();
+                                    int h_exp = Integer.valueOf(raw_expectedArrival.substring(0, 2));
+                                    int m_exp = Integer.valueOf(raw_expectedArrival.substring(3, 5));
 
+                                    new_station.delay = 60 *h_sch + m_sch - 60 * h_exp - m_exp;
+
+                                    new_station.arrival_time[0] = h_exp;
+                                    new_station.arrival_time[1] = m_exp;
+                                }
+                                //assume we haven't visited station yet
+                                new_station.visited = false;
+                                stations.add(new_station);
                             }
                         }
-                        //Horrible error "handling"
+                        //Horrible error "handling" lol
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Log.d("d_tag", "caught error" + e.toString());
                     } catch (SAXException e) {
                         e.printStackTrace();
-                        Log.d("d_tag", "caught error" + e.toString());
 
                     }
                     Log.d("Debug", "Thread ran");
@@ -96,13 +135,30 @@ public class trainFetcher {
                 e.printStackTrace();
             }
         }
-        for (String s : stations) {
-            location++;
-            if (s.equals(currentStation))
-                return location;
+        Date time_date = new Date();
+        int curr_hour = time_date.getHours(); //time_date.toInstant().atZone(ZoneId.systemDefault()).getHour();
+        int curr_min = time_date.getMinutes(); //time_date.toInstant().atZone(ZoneId.systemDefault()).getMinute();
+        for (int i = 0; i < stations.size();i++) {
 
+            if (compareTimes(stations.get(i).arrival_time, curr_hour,curr_min)){
+                Log.d("d_tag", currentStation +"  "+String.valueOf(stations.get(i).location));
+                return location;
+            }
+            location++;
+            stations.get(i).visited = true;
         }
         return location;
+
+    }
+
+    private boolean compareTimes(int[] arrival_time, int curr_hour, int curr_min){
+
+        if(curr_hour - arrival_time[0] < 23){
+            //standard case return true if the station has not yet been visited
+            return (curr_hour *60 + curr_min < 60*arrival_time[0] + arrival_time[1]);
+        }
+        return (curr_hour *60 + curr_min < 60*(24+arrival_time[0]) + arrival_time[1]);
+
 
     }
 
