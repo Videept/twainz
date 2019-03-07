@@ -27,7 +27,7 @@ public class Linerun extends Fragment {
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_linerun, container, false);
-        trainFetcher tf = new trainFetcher();
+        trainFetcher tf = new trainFetcher(getContext());
 
         Bundle args = getArguments();
         train t = tf.getTrains().get(Integer.valueOf(args.getString(DATA_RECEIVE)));

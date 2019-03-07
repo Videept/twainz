@@ -26,7 +26,7 @@ public class stationList extends Fragment  {
 
         mListView = rootView.findViewById(R.id.listView);
 
-        trainFetcher tf = new trainFetcher();
+        trainFetcher tf = new trainFetcher(getContext());
         names = new Vector<String>();
         names = tf.getStationList();
 
@@ -38,7 +38,7 @@ public class stationList extends Fragment  {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                trainFetcher tf = new trainFetcher();
+                trainFetcher tf = new trainFetcher(getContext());
                 String search = tf.getStationList().get(Integer.valueOf(position));
                 tf.setStationQuery(search);
 

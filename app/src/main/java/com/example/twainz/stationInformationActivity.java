@@ -37,7 +37,7 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         rootView = inflater.inflate(R.layout.station_view_fragment, container, false);
 
         //Initialise the trainFetcher. Object should already contain the string of the specified station
-        tf = new trainFetcher();
+        tf = new trainFetcher(getContext());
 
         //Display the station name
         TextView stationDisplay = rootView.findViewById(R.id.stationView);
@@ -69,7 +69,7 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                trainFetcher tf = new trainFetcher();
+                trainFetcher tf = new trainFetcher(getContext());
                 train t = tf.getTrains().get(Integer.valueOf(position));
 
 

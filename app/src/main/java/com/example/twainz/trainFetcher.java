@@ -1,6 +1,7 @@
 package com.example.twainz;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.icu.text.SimpleDateFormat;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
@@ -10,7 +11,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.ParseException;
 import java.time.ZoneId;
@@ -24,14 +28,17 @@ import javax.xml.parsers.ParserConfigurationException;
 public class trainFetcher {
     private static Vector<String> stationList;
     static private Vector<train> trainList;
-    private boolean fetched;
+    static private Vector<station> stations;
     static private String stationQuery;
+    private Context context;
 
-    public trainFetcher(){
+    public trainFetcher(Context c){
         stationList = new Vector<String>(); //Initialise the vector to contain the station names
         trainList = new Vector<train>(); //Initialise the vector containing the train data for later use
+        this.context = c;
 
         this.getStationList();
+
 
     }
     void setStationQuery(String stationQuery_){
@@ -163,59 +170,12 @@ public class trainFetcher {
     //Getter for the station list vector
     public Vector<String> getStationList(){
 
-        if (stationList.isEmpty()){
+        if (stationList.isEmpty()) {
 
-            Thread networkThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
+            stations = readStationFromXML();
 
-                    //Initialise the document build to build the document from the XML
-                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                    DocumentBuilder db = null;
-                    Document doc;
-
-                    try {
-                        db = dbf.newDocumentBuilder();
-                    } catch (ParserConfigurationException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-
-                        //Retrieve the XML from the URL
-                        doc = db.parse(new URL("http://api.irishrail.ie/realtime/realtime.asmx/getAllStationsXML_WithStationType?StationType=D").openStream());
-                        NodeList stations = doc.getElementsByTagName("objStation"); //Convert the objStation objects into a NodeList
-
-                        //Loop through each element of the NodeList
-                        for (int i = 0; i < stations.getLength(); i++){
-                            Node current = stations.item(i);
-
-                            //If the current node is an element
-                            if (current.getNodeType() == Node.ELEMENT_NODE){
-
-                                //Add the station name to the station name vector
-                                stationList.add(((Element)current)
-                                        .getElementsByTagName("StationDesc")
-                                        .item(0)
-                                        .getTextContent());
-                            }
-                        }
-                        //Horrible error "handling"
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (SAXException e) {
-                        e.printStackTrace();
-                    }
-                    Log.d("Debug", "Thread ran");
-                }
-
-            });
-            networkThread.start();
-            try {
-                networkThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            for (station s : stations)
+                stationList.add(s.stationName);
         }
         return stationList;
     }
@@ -331,6 +291,50 @@ public class trainFetcher {
         return null;
     }
 
+
+    private Vector<station> readStationFromXML(){
+        InputStream stationFile = context.getResources().openRawResource(context.getResources().getIdentifier("station_list",
+                        "raw", context.getPackageName()));
+        Vector<station> sList = new Vector<station>();
+
+        Document document = null;
+        try {
+            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(stationFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        NodeList nodeList = document.getElementsByTagName("objStation");
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                station s = new station();
+
+                s.stationName = ((Element) node).getElementsByTagName("StationDesc").item(0).getTextContent();
+                s.stationCode = ((Element) node).getElementsByTagName("StationCode").item(0).getTextContent();
+                s.latitude = Double.valueOf(((Element) node).getElementsByTagName("StationLatitude").item(0).getTextContent());
+                s.longitude = Double.valueOf(((Element) node).getElementsByTagName("StationLongitude").item(0).getTextContent());
+                s.stationId = Integer.valueOf(((Element) node).getElementsByTagName("StationId").item(0).getTextContent());
+
+                sList.add(s);
+            }
+
+        }
+        return sList;
+    }
+
+    class station{
+        protected String stationName;
+        protected String stationCode;
+        protected double latitude;
+        protected double longitude;
+        protected int stationId;
+    }
 
 
 }
