@@ -96,6 +96,7 @@ class LinerunAdapter extends ArrayAdapter<LinerunStation> {
         bars on the lineview disappear
 
          */
+
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.linerun_row, parent, false);
 
         TextView tv = convertView.findViewById(R.id.station_name);
@@ -117,16 +118,10 @@ class LinerunAdapter extends ArrayAdapter<LinerunStation> {
             tv.setText("- on time");
         }
 
-        ConstraintLayout flayout = convertView.findViewById(R.id.bar_foreground);
-        ConstraintLayout blayout = convertView.findViewById(R.id.bar_background);
-        int max_height = blayout.getMaxHeight();
-
         if(s.visited){
-            flayout.setMaxHeight(max_height);
-            blayout.setMaxHeight(0);
+            convertView.findViewById(R.id.view_bar).setBackgroundColor(rgb(229, 220, 137));
         }else{
-            blayout.setMaxHeight(max_height);
-            flayout.setMaxHeight(0);
+            convertView.findViewById(R.id.view_bar).setBackgroundColor(rgb(209, 213, 214));
         }
 
         return convertView;
