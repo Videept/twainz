@@ -29,7 +29,7 @@ public class Linerun extends Fragment {
 
         Bundle args = getArguments();
         trainFetcher.train t = tf.getTrains().get(Integer.valueOf(args.getString(DATA_RECEIVE)));
-        ((MainActivity)getActivity()).setActionBarTitle("Line run test string");
+        ((MainActivity)getActivity()).setActionBarTitle("Line run");
 
         Vector<LinerunStation> stations = new Vector<>();
         TextView display = rootView.findViewById(R.id.textView);

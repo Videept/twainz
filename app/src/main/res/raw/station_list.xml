@@ -97,7 +97,7 @@
         <StationId>175</StationId>
     </objStation>
     <objStation>
-        <StationDesc>Carrick on Shannon</StationDesc>
+        <StationDesc>Carrick On Shannon</StationDesc>
         <StationAlias />
         <StationLatitude>53.9383</StationLatitude>
         <StationLongitude>-8.10657</StationLongitude>
@@ -233,7 +233,7 @@
         <StationId>153</StationId>
     </objStation>
     <objStation>
-        <StationDesc>Rush and Lusk</StationDesc>
+        <StationDesc>Rush And Lusk</StationDesc>
         <StationAlias />
         <StationLatitude>53.5201</StationLatitude>
         <StationLongitude>-6.1439</StationLongitude>
@@ -1097,7 +1097,7 @@
         <StationId>43</StationId>
     </objStation>
     <objStation>
-        <StationDesc>Carrick on Suir</StationDesc>
+        <StationDesc>Carrick On Suir</StationDesc>
         <StationAlias />
         <StationLatitude>52.3487</StationLatitude>
         <StationLongitude>-7.40354</StationLongitude>
@@ -1257,7 +1257,7 @@
         <StationId>380</StationId>
     </objStation>
     <objStation>
-        <StationDesc>LittleIsland</StationDesc>
+        <StationDesc>Little Island</StationDesc>
         <StationAlias>Little Island</StationAlias>
         <StationLatitude>51.9078</StationLatitude>
         <StationLongitude>-8.35466</StationLongitude>

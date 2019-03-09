@@ -27,6 +27,7 @@ public class trainFetcher {
     static private Vector<station> stations;
     static private String stationQuery;
     private Context context;
+    static int stationQueryCode;
 
     public trainFetcher(Context c){
         this.context = c;
@@ -175,9 +176,8 @@ public class trainFetcher {
         return stationList;
     }
 
-    public Vector<train> retrieveTrainsAtStation(String station){
+    public Vector<train> retrieveTrainsAtStation(String station, int current_index){
         stationQuery = station;
-
         //Check if the station exists
         if (stationList.contains(station)) {
             trainList = new Vector<>();
@@ -189,7 +189,8 @@ public class trainFetcher {
 
                     try {
                         doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
-                                new URL("http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc=" + stationQuery)
+                                new URL("http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByCodeXML?StationCode=" +
+                                        stations.get(current_index).stationCode)
                                         .openStream());
 
                     } catch (IOException e) {

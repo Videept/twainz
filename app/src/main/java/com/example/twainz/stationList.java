@@ -31,7 +31,7 @@ public class stationList extends Fragment  {
         rootView = inflater.inflate(R.layout.activity_list, container, false);
 
         mListView = rootView.findViewById(R.id.listView);
-
+        EditText searchbar = rootView.findViewById(R.id.search_text);
         final trainFetcher tf = new trainFetcher(getContext());
 
         list = new ArrayList<>(tf.getStationList());
@@ -50,6 +50,10 @@ public class stationList extends Fragment  {
 
                 Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
                 fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, search);
+                if(!searchbar.getText().toString().equals("")) {
+                    position = tf.getStationList().indexOf(list.get(position));
+                }
+                fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECIEVE, position);
                 fragment.setArguments(fragmentData);
 
                 fragmentTransaction.replace(R.id.listConstraintLayout, fragment);   //Replace listConstraintLayout with the new fragment
@@ -58,7 +62,7 @@ public class stationList extends Fragment  {
             }
         });
 
-        EditText searchbar = rootView.findViewById(R.id.search_text);
+
         searchbar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

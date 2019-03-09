@@ -31,9 +31,11 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
     private trainFetcher tf;
     private Vector<trainFetcher.train> currentTrains;
     private trainAdapter adapter;
+    private int current_index;
 
 
     final static String DATA_RECEIVE = "data_receive";
+    final static String INDEX_RECIEVE = "index_receive";
 
     @Nullable
     @Override
@@ -45,7 +47,8 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
 
         //Using the trainFetcher to retrieve the data for the station
         Bundle args = getArguments();
-        currentTrains = tf.retrieveTrainsAtStation(args.getString(DATA_RECEIVE));
+        currentTrains = tf.retrieveTrainsAtStation(args.getString(DATA_RECEIVE),args.getInt(INDEX_RECIEVE) );
+
         ((MainActivity)getActivity()).setActionBarTitle(args.getString(DATA_RECEIVE));
 
         //Get the current time
