@@ -46,10 +46,7 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         //Using the trainFetcher to retrieve the data for the station
         Bundle args = getArguments();
         currentTrains = tf.retrieveTrainsAtStation(args.getString(DATA_RECEIVE));
-
-        //Display the station name
-        //TextView stationDisplay = rootView.findViewById(R.id.stationView);
-        ///stationDisplay.setText(args.getString(DATA_RECEIVE));
+        ((MainActivity)getActivity()).setActionBarTitle(args.getString(DATA_RECEIVE));
 
         //Get the current time
         Calendar calender = Calendar.getInstance();
@@ -58,10 +55,6 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         //Display the current time
         TextView displayRefresh = rootView.findViewById(R.id.refreshView);
         displayRefresh.setText("Updated at " + time.format(calender.getTime()));
-
-        ((MainActivity)getActivity()).setActionBarTitle(args.getString(DATA_RECEIVE));
-        //getParentFragment().getActivity().getActionBar().setTitle(args.getString(DATA_RECEIVE));
-
 
         ArrayList<trainFetcher.train> list = new ArrayList<trainFetcher.train>(currentTrains);
 
@@ -77,7 +70,7 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                android.support.v4.app.FragmentManager childManager = getActivity().getSupportFragmentManager();
+                android.support.v4.app.FragmentManager childManager = getFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   //Begin the fragment change
                 Fragment fragment = new Linerun();   //Initialise the new fragment
 
@@ -85,7 +78,8 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
                 fragmentData.putString(((Linerun) fragment).DATA_RECEIVE, String.valueOf(position));
                 fragment.setArguments(fragmentData);
 
-                fragmentTransaction.replace(R.id.listConstraintLayout, fragment);   //Replace listConstraintLayout with the new fragment
+                fragmentTransaction.replace(R.id.constraintLayout2
+                        , fragment);   //Replace listConstraintLayout with the new fragment
                 fragmentTransaction.addToBackStack(null);   //Add the previous fragment to the stack so the back button works
                 fragmentTransaction.commit();   //Complete the fragment transaction
             }
@@ -94,6 +88,16 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
 
         return rootView;
 
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser && isAdded()) {
+            Bundle args = getArguments();
+            ((MainActivity)getActivity()).setActionBarTitle(args.getString(DATA_RECEIVE));
+            Log.d("D", "Station information called");
+        }
     }
 
     @Override

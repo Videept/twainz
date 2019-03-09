@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class Linerun extends Fragment {
 
         Bundle args = getArguments();
         trainFetcher.train t = tf.getTrains().get(Integer.valueOf(args.getString(DATA_RECEIVE)));
+        ((MainActivity)getActivity()).setActionBarTitle("Line run test string");
 
         Vector<LinerunStation> stations = new Vector<>();
         TextView display = rootView.findViewById(R.id.textView);
@@ -41,6 +43,16 @@ public class Linerun extends Fragment {
 
         return rootView;
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser && isAdded()) {
+            ((MainActivity)getActivity()).setActionBarTitle("Line run test string");
+            Log.d("D", "Line run called");
+        }
+    }
+
 
     private void drawLinerun(Vector<LinerunStation> stations, final int current_station) {
         ArrayList<LinerunStation> alist_stations = new ArrayList<>(stations);

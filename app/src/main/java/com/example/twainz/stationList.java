@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +39,7 @@ public class stationList extends Fragment  {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String search = tf.getStationList().get(Integer.valueOf(position));
 
-                android.support.v4.app.FragmentManager childManager = getActivity().getSupportFragmentManager();
+                android.support.v4.app.FragmentManager childManager = getFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   //Begin the fragment change
                 Fragment fragment = new stationInformationActivity();   //Initialise the new fragment
 
@@ -52,6 +54,15 @@ public class stationList extends Fragment  {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser && isAdded()) {
+            ((MainActivity)getActivity()).setActionBarTitle(getResources().getString(R.string.app_name));
+            Log.d("D", "Station list called");
+        }
     }
 
 

@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity{
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setId(R.id.container);
+        //mViewPager.setId(R.id.container);
 
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity{
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+
         if (id == R.id.action_settings) {
             Log.d("d_tag", String.valueOf(findViewById(R.id.container).getMeasuredHeight()/getResources().getDisplayMetrics().density));
             return true;
@@ -63,6 +63,52 @@ public class MainActivity extends AppCompatActivity{
 
     public void setActionBarTitle(String title) {
         getSupportActionBar().setTitle(title);
+    }
+
+ /*   @Override
+    public void onBackPressed() {
+
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+
+        } else {
+            getFragmentManager().popBackStack();
+        }
+
+    }
+*/
+    @Override
+    public void onBackPressed() {
+
+        FragmentManager fm = getSupportFragmentManager();
+       /* for (Fragment frag : fm.getFragments()) {
+            if (frag.isVisible()) { //If this is the current fragment
+
+                FragmentManager childFm = frag.getChildFragmentManager();
+
+                if (childFm.getBackStackEntryCount() > 0) { //Check if it has any child fragments on its stack
+                    if (childFm.getBackStackEntryCount() > 1) {
+                        Fragment f = childFm.getFragments().get(childFm.getBackStackEntryCount() - 2);
+                        f.setUserVisibleHint(true);
+                    }
+                    else
+                        frag.setUserVisibleHint(true);
+
+                    childFm.popBackStack();
+
+                    return;
+                }
+
+            }
+        }*/
+
+        int index = (fm.getBackStackEntryCount() > 1) ? fm.getBackStackEntryCount() : 0;
+        Fragment frag = fm.getFragments().get(index);
+        frag.setUserVisibleHint(true);
+
+        super.onBackPressed();
     }
 
     /**
