@@ -33,8 +33,6 @@ public class trainFetcher {
     private Context context;
 
     public trainFetcher(Context c){
-        stationList = new Vector<String>(); //Initialise the vector to contain the station names
-        trainList = new Vector<train>(); //Initialise the vector containing the train data for later use
         this.context = c;
 
         this.getStationList();
@@ -170,7 +168,8 @@ public class trainFetcher {
     //Getter for the station list vector
     public Vector<String> getStationList(){
 
-        if (stationList.isEmpty()) {
+        if (stationList == null || stationList.isEmpty()) {
+            stationList = new Vector<>();
 
             stations = readStationFromXML();
 
@@ -185,9 +184,7 @@ public class trainFetcher {
 
         //Check if the station exists
         if (stationList.contains(station)) {
-
-            if (!trainList.isEmpty())
-                trainList.clear();
+            trainList = new Vector<>();
 
             Thread networkThread = new Thread(new Runnable() {
                 @Override
@@ -252,8 +249,6 @@ public class trainFetcher {
         Log.e("Error", "Station name doesnt exist. Couldnt get data");
         return null;
     }
-
-
 
     private Vector<station> readStationFromXML(){
         InputStream stationFile = context.getResources().openRawResource(context.getResources().getIdentifier("station_list",
