@@ -16,7 +16,6 @@ import java.util.Vector;
 
 public class stationList extends Fragment  {
     private ListView mListView;
-    private Vector<String> names;
     private View rootView;
 
     @Nullable
@@ -26,11 +25,9 @@ public class stationList extends Fragment  {
 
         mListView = rootView.findViewById(R.id.listView);
 
-        trainFetcher tf = new trainFetcher(getContext());
-        names = new Vector<String>();
-        names = tf.getStationList();
+        final trainFetcher tf = new trainFetcher(getContext());
 
-        ArrayList<String> list = new ArrayList<String>(names);
+        ArrayList<String> list = new ArrayList<String>(tf.getStationList());
 
         StringAdapter adapter = new StringAdapter(rootView.getContext(), list);
 
@@ -38,13 +35,16 @@ public class stationList extends Fragment  {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                trainFetcher tf = new trainFetcher(getContext());
                 String search = tf.getStationList().get(Integer.valueOf(position));
-                tf.setStationQuery(search);
 
                 android.support.v4.app.FragmentManager childManager = getActivity().getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   //Begin the fragment change
                 Fragment fragment = new stationInformationActivity();   //Initialise the new fragment
+
+                Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
+                fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, search);
+                fragment.setArguments(fragmentData);
+
                 fragmentTransaction.replace(R.id.listConstraintLayout, fragment);   //Replace listConstraintLayout with the new fragment
                 fragmentTransaction.addToBackStack(null);   //Add the previous fragment to the stack so the back button works
                 fragmentTransaction.commit();   //Complete the fragment transaction

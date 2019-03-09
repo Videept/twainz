@@ -38,14 +38,14 @@ public class trainFetcher {
         this.context = c;
 
         this.getStationList();
-
-
     }
-    void setStationQuery(String stationQuery_){
-        stationQuery = new String(stationQuery_);
-    }
+
     String getStationQuery(){
         return stationQuery;
+    }
+
+    public Vector<train> getTrains(){
+        return trainList;
     }
 
     public int getLineRun(final Vector<LinerunStation> stations, final String trainID, final String date, final String currentStation){
@@ -180,108 +180,70 @@ public class trainFetcher {
         return stationList;
     }
 
-    public Vector<train> getTrains(){
+    public Vector<train> retrieveTrainsAtStation(String station){
+        stationQuery = station;
 
         //Check if the station exists
-        if (stationList.contains(stationQuery)) {
+        if (stationList.contains(station)) {
 
             if (!trainList.isEmpty())
                 trainList.clear();
 
-                Thread networkThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+            Thread networkThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Document doc = null;
 
-                        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                        DocumentBuilder db = null;
-                        Document doc;
+                    try {
+                        doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
+                                new URL("http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc=" + stationQuery)
+                                        .openStream());
 
-                        try {
-                            db = dbf.newDocumentBuilder();
-                        } catch (ParserConfigurationException e) {
-                            e.printStackTrace();
-                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (SAXException e) {
+                        e.printStackTrace();
+                    } catch (ParserConfigurationException e) {
+                        e.printStackTrace();
+                    }
 
+                    if (doc != null) {
+                        NodeList trains = doc.getElementsByTagName("objStationData"); //Convert the objStation objects into a NodeList
 
-                        try {
-                            doc = db.parse(new URL("http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc=" + stationQuery + "&NumMins=90").openStream());
-                            NodeList trains = doc.getElementsByTagName("objStationData"); //Convert the objStation objects into a NodeList
+                        //Loop through each element of the NodeList
+                        for (int i = 0; i < trains.getLength(); i++) {
+                            Node current = trains.item(i);
 
-                            //Loop through each element of the NodeList
-                            for (int i = 0; i < trains.getLength(); i++) {
-                                Node current = trains.item(i);
+                            //If the current node is an element
+                            if (current.getNodeType() == Node.ELEMENT_NODE) {
+                                train t = new train();
 
-                                //If the current node is an element
-                                if (current.getNodeType() == Node.ELEMENT_NODE) {
-                                    train t = new train();
+                                //If the "Schdepart" is 00:00 try the Scharrival instead
+                                t.arrivalTime = ((Element) current).getElementsByTagName("Schdepart").item(0).getTextContent().equals("00:00") ?
+                                        ((Element) current).getElementsByTagName("Scharrival").item(0).getTextContent() :
+                                        ((Element) current).getElementsByTagName("Schdepart").item(0).getTextContent();
 
-                                    String buffer = ((Element) current)
-                                            .getElementsByTagName("Schdepart")
-                                            .item(0)
-                                            .getTextContent();
+                                t.delay = Integer.valueOf(((Element) current).getElementsByTagName("Late").item(0).getTextContent());
+                                t.destination = ((Element) current).getElementsByTagName("Destination").item(0).getTextContent();
+                                t.type = ((Element) current).getElementsByTagName("Traintype").item(0).getTextContent();
+                                t.id = ((Element) current).getElementsByTagName("Traincode").item(0).getTextContent();
+                                t.date = ((Element) current).getElementsByTagName("Traindate").item(0).getTextContent();
 
-                                    if (buffer.equals("00:00")){
-                                        buffer = ((Element) current)
-                                                .getElementsByTagName("Scharrival")
-                                                .item(0)
-                                                .getTextContent();
-                                    }
-
-                                    t.setArrivalTime(buffer);
-
-                                    buffer = ((Element) current)
-                                            .getElementsByTagName("Late")
-                                            .item(0)
-                                            .getTextContent();
-
-                                    t.setDelay(Integer.valueOf(buffer));
-
-                                    buffer = ((Element) current)
-                                            .getElementsByTagName("Destination")
-                                            .item(0)
-                                            .getTextContent();
-
-                                    t.setDestination(buffer);
-
-                                    buffer = ((Element) current)
-                                            .getElementsByTagName("Traintype")
-                                            .item(0)
-                                            .getTextContent();
-
-                                    t.setType(buffer);
-
-                                    buffer = ((Element) current)
-                                            .getElementsByTagName("Traincode")
-                                            .item(0)
-                                            .getTextContent();
-                                    t.setId(buffer);
-
-                                    buffer = ((Element) current)
-                                            .getElementsByTagName("Traindate")
-                                            .item(0)
-                                            .getTextContent();
-
-                                    t.setDate(buffer);
-
-
-                                    trainList.add(t);
-                                }
+                                trainList.add(t);
                             }
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (SAXException e) {
-                            e.printStackTrace();
                         }
                     }
-                });
-                networkThread.start();
 
-                try {
-                    networkThread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+
                 }
+            });
+            networkThread.start();
+
+            try {
+                networkThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             return trainList;
 
@@ -292,10 +254,11 @@ public class trainFetcher {
     }
 
 
+
     private Vector<station> readStationFromXML(){
         InputStream stationFile = context.getResources().openRawResource(context.getResources().getIdentifier("station_list",
                         "raw", context.getPackageName()));
-        Vector<station> sList = new Vector<station>();
+        Vector<station> sList = new Vector<>();
 
         Document document = null;
         try {
@@ -334,6 +297,30 @@ public class trainFetcher {
         protected double latitude;
         protected double longitude;
         protected int stationId;
+    }
+
+    class train{
+        protected String arrivalTime;
+        protected int delay;
+        protected String destination;
+        protected String type;
+        protected String id;
+        protected String date;
+
+        public String getArrivalTime(){
+            return arrivalTime;
+        }
+        public String getDestination(){
+            return destination;
+        }
+        public int getDelay(){
+            return delay;
+        }
+        public String getType(){
+            return type;
+        }
+        public String getId(){ return id; }
+        public String getDate(){ return date; }
     }
 
 

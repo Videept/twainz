@@ -67,11 +67,6 @@ public class Twitter extends Fragment {
                 } catch (TwitterException e) {
                     e.printStackTrace();
                 }
-
-                for(Status st: status)
-                {
-                    System.out.println(st.getUser().getName()+"------"+st.getText());
-                }
             }
         });
         network.start();

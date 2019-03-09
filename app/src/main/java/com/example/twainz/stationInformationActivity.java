@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -28,8 +29,11 @@ import java.util.Vector;
 public class stationInformationActivity extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     private View rootView;
     private trainFetcher tf;
-    private Vector<train> currentTrains;
+    private Vector<trainFetcher.train> currentTrains;
     private trainAdapter adapter;
+
+
+    final static String DATA_RECEIVE = "data_receive";
 
     @Nullable
     @Override
@@ -39,9 +43,13 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         //Initialise the trainFetcher. Object should already contain the string of the specified station
         tf = new trainFetcher(getContext());
 
+        //Using the trainFetcher to retrieve the data for the station
+        Bundle args = getArguments();
+        currentTrains = tf.retrieveTrainsAtStation(args.getString(DATA_RECEIVE));
+
         //Display the station name
-        TextView stationDisplay = rootView.findViewById(R.id.stationView);
-        stationDisplay.setText(tf.getStationQuery());
+        //TextView stationDisplay = rootView.findViewById(R.id.stationView);
+        ///stationDisplay.setText(args.getString(DATA_RECEIVE));
 
         //Get the current time
         Calendar calender = Calendar.getInstance();
@@ -51,11 +59,11 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         TextView displayRefresh = rootView.findViewById(R.id.refreshView);
         displayRefresh.setText("Updated at " + time.format(calender.getTime()));
 
+        ((MainActivity)getActivity()).setActionBarTitle(args.getString(DATA_RECEIVE));
+        //getParentFragment().getActivity().getActionBar().setTitle(args.getString(DATA_RECEIVE));
 
-        //Using the trainFetcher to retrieve the data for the station
-        currentTrains = tf.getTrains();
 
-        ArrayList<train> list = new ArrayList<train>(currentTrains);
+        ArrayList<trainFetcher.train> list = new ArrayList<trainFetcher.train>(currentTrains);
 
         adapter = new trainAdapter(rootView.getContext(), list);
 
@@ -69,18 +77,13 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                trainFetcher tf = new trainFetcher(getContext());
-                train t = tf.getTrains().get(Integer.valueOf(position));
-
-
                 android.support.v4.app.FragmentManager childManager = getActivity().getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   //Begin the fragment change
                 Fragment fragment = new Linerun();   //Initialise the new fragment
 
-
-                Bundle test = new Bundle();
-                test.putString(((Linerun) fragment).DATA_RECEIVE, String.valueOf(position));
-                fragment.setArguments(test);
+                Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
+                fragmentData.putString(((Linerun) fragment).DATA_RECEIVE, String.valueOf(position));
+                fragment.setArguments(fragmentData);
 
                 fragmentTransaction.replace(R.id.listConstraintLayout, fragment);   //Replace listConstraintLayout with the new fragment
                 fragmentTransaction.addToBackStack(null);   //Add the previous fragment to the stack so the back button works
@@ -111,16 +114,15 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
     }
 }
 
-class trainAdapter extends ArrayAdapter<train> {
+class trainAdapter extends ArrayAdapter<trainFetcher.train> {
 
-    public trainAdapter(Context context, ArrayList<train> trains) {
+    public trainAdapter(Context context, ArrayList<trainFetcher.train> trains) {
         super(context, 0, trains);
-
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        train t = getItem(position);
+        trainFetcher.train t = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.station_information_row, parent, false);
@@ -137,9 +139,6 @@ class trainAdapter extends ArrayAdapter<train> {
         tempView = convertView.findViewById(R.id.arrivalTimeView);
         tempView.setText(t.getArrivalTime());
         tempView.setTag(position); //Tag the button with it's position in the list
-
-
-
 
         return convertView;
 
