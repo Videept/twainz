@@ -1,22 +1,29 @@
 package com.example.twainz;
 
 import android.content.Context;
+import android.support.annotation.ArrayRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class stationList extends Fragment  {
     private ListView mListView;
     private View rootView;
+    private static ArrayList<String> list;  //had to make this static to avoid having to make it final
+                                            //(it would otherwise have to be final inside the textwatcher
 
     @Nullable
     @Override
@@ -27,15 +34,15 @@ public class stationList extends Fragment  {
 
         final trainFetcher tf = new trainFetcher(getContext());
 
-        ArrayList<String> list = new ArrayList<String>(tf.getStationList());
+        list = new ArrayList<>(tf.getStationList());
 
-        StringAdapter adapter = new StringAdapter(rootView.getContext(), list);
+        final StringAdapter adapter = new StringAdapter(rootView.getContext(), list);
 
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String search = tf.getStationList().get(Integer.valueOf(position));
+                String search = list.get(position);
 
                 android.support.v4.app.FragmentManager childManager = getActivity().getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   //Begin the fragment change
@@ -51,8 +58,51 @@ public class stationList extends Fragment  {
             }
         });
 
+        EditText searchbar = rootView.findViewById(R.id.search_text);
+        searchbar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                list = new ArrayList<>(tf.getStationList());
+                adapter.clear();
+                adapter.addAll(list);
+                adapter.notifyDataSetChanged();
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                list = SearchSequence(s, list);
+                adapter.clear();
+                adapter.addAll(list);
+                adapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s){
+            }
+        });
+
         return rootView;
     }
+
+
+    private ArrayList<String> SearchSequence(CharSequence s, ArrayList<String> list){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            return list.stream()
+            .filter(future_results->future_results.contains(s))
+            .collect(Collectors.toCollection(ArrayList<String>::new));
+        }
+        ArrayList<String> results = new ArrayList<>();
+        for (String str : list){
+            if(str.contains(s) || str.contains(s.toString().toUpperCase())) {
+                results.add(str);
+                Log.d("d_tag", str);
+            }
+        }
+        return results;
+    }
+
+
 
 
 }

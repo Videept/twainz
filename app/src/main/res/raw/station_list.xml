@@ -593,7 +593,7 @@
         <StationId>976</StationId>
     </objStation>
     <objStation>
-        <StationDesc>PARK WEST</StationDesc>
+        <StationDesc>Park West</StationDesc>
         <StationAlias>Park West (Cherry Orchard )</StationAlias>
         <StationLatitude>53.334</StationLatitude>
         <StationLongitude>-6.37868</StationLongitude>
@@ -1305,7 +1305,7 @@
         <StationId>66</StationId>
     </objStation>
     <objStation>
-        <StationDesc>CITY JUNCTION</StationDesc>
+        <StationDesc>City Junction</StationDesc>
         <StationAlias>Dublin Belfast</StationAlias>
         <StationLatitude>0</StationLatitude>
         <StationLongitude>0</StationLongitude>
@@ -1313,7 +1313,7 @@
         <StationId>1516</StationId>
     </objStation>
     <objStation>
-        <StationDesc>CENTRAL JUNCTION</StationDesc>
+        <StationDesc>Central Junction</StationDesc>
         <StationAlias>Dublin Belfast</StationAlias>
         <StationLatitude>0</StationLatitude>
         <StationLongitude>0</StationLongitude>
@@ -1321,7 +1321,7 @@
         <StationId>1517</StationId>
     </objStation>
     <objStation>
-        <StationDesc>DUNMURRAY</StationDesc>
+        <StationDesc>Dunmurray</StationDesc>
         <StationAlias>Dublin Belfast</StationAlias>
         <StationLatitude>0</StationLatitude>
         <StationLongitude>0</StationLongitude>
@@ -1329,7 +1329,7 @@
         <StationId>1518</StationId>
     </objStation>
     <objStation>
-        <StationDesc>MOIRA</StationDesc>
+        <StationDesc>Moira</StationDesc>
         <StationAlias>Dublin Belfast</StationAlias>
         <StationLatitude>0</StationLatitude>
         <StationLongitude>0</StationLongitude>
