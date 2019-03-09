@@ -2,9 +2,7 @@ package com.example.twainz;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +14,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import static android.graphics.Color.parseColor;
 import static android.graphics.Color.rgb;
 
 public class Linerun extends Fragment {
