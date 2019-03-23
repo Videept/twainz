@@ -94,7 +94,6 @@ public class stationList extends Fragment  {
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser && isAdded()) {
             ((MainActivity)getActivity()).setActionBarTitle(getResources().getString(R.string.app_name));
-            Log.d("D", "Station list called");
         }
     }
 

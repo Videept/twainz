@@ -45,6 +45,14 @@ public class Twitter extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser && isAdded()) {
+            //((MainActivity)getActivity()).setActionBarTitle(getResources().getString(R.string.app_name));
+        }
+    }
+
     public void printTweets(){
 
         Thread network = new Thread(new Runnable() {

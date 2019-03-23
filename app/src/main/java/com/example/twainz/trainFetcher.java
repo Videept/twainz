@@ -216,7 +216,7 @@ public class trainFetcher {
                                 t.arrivalTime = ((Element) current).getElementsByTagName("Schdepart").item(0).getTextContent().equals("00:00") ?
                                         ((Element) current).getElementsByTagName("Scharrival").item(0).getTextContent() :
                                         ((Element) current).getElementsByTagName("Schdepart").item(0).getTextContent();
-
+                                t.dueTime = Byte.valueOf(((Element) current).getElementsByTagName("Duein").item(0).getTextContent());
                                 t.delay = Integer.valueOf(((Element) current).getElementsByTagName("Late").item(0).getTextContent());
                                 t.destination = ((Element) current).getElementsByTagName("Destination").item(0).getTextContent();
                                 t.type = ((Element) current).getElementsByTagName("Traintype").item(0).getTextContent();
@@ -298,6 +298,7 @@ public class trainFetcher {
         protected String type;
         protected String id;
         protected String date;
+        protected byte dueTime;
 
         public String getArrivalTime(){
             return arrivalTime;
@@ -313,6 +314,7 @@ public class trainFetcher {
         }
         public String getId(){ return id; }
         public String getDate(){ return date; }
+        public byte getDueTime(){ return dueTime; }
     }
 
 

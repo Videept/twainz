@@ -29,9 +29,8 @@ import java.util.Vector;
 public class stationInformationActivity extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     private View rootView;
     private trainFetcher tf;
-    private Vector<trainFetcher.train> currentTrains;
     private trainAdapter adapter;
-    private int current_index;
+    ArrayList<trainFetcher.train> trainList;
 
 
     final static String DATA_RECEIVE = "data_receive";
@@ -47,7 +46,7 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
 
         //Using the trainFetcher to retrieve the data for the station
         Bundle args = getArguments();
-        currentTrains = tf.retrieveTrainsAtStation(args.getString(DATA_RECEIVE),args.getInt(INDEX_RECIEVE) );
+        tf.retrieveTrainsAtStation(args.getString(DATA_RECEIVE),args.getInt(INDEX_RECIEVE) );
 
         ((MainActivity)getActivity()).setActionBarTitle(args.getString(DATA_RECEIVE));
 
@@ -59,9 +58,9 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         TextView displayRefresh = rootView.findViewById(R.id.refreshView);
         displayRefresh.setText("Updated at " + time.format(calender.getTime()));
 
-        ArrayList<trainFetcher.train> list = new ArrayList<trainFetcher.train>(currentTrains);
+        trainList = new ArrayList<trainFetcher.train>(tf.getTrains());
 
-        adapter = new trainAdapter(rootView.getContext(), list);
+        adapter = new trainAdapter(rootView.getContext(), trainList);
 
         ListView lv =  rootView.findViewById(R.id.trainListView);
 
@@ -99,13 +98,22 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         if(isVisibleToUser && isAdded()) {
             Bundle args = getArguments();
             ((MainActivity)getActivity()).setActionBarTitle(args.getString(DATA_RECEIVE));
-            Log.d("D", "Station information called");
         }
     }
-
+    @Override
+    public void onResume(){
+        Bundle args = getArguments();
+        ((MainActivity)getActivity()).setActionBarTitle(args.getString(DATA_RECEIVE));
+        super.onResume();
+    }
     @Override
     public void onRefresh() {
-        currentTrains = tf.getTrains();
+        Bundle args = getArguments();
+        tf.retrieveTrainsAtStation(args.getString(DATA_RECEIVE),args.getInt(INDEX_RECIEVE) );
+
+        //Clear the array list and update the data set.
+        trainList.clear();
+        trainList.addAll(tf.getTrains());
         adapter.notifyDataSetChanged();
 
         //Get the current time
@@ -144,7 +152,7 @@ class trainAdapter extends ArrayAdapter<trainFetcher.train> {
         tempView.setTag(position); //Tag the button with it's position in the list
 
         tempView = convertView.findViewById(R.id.arrivalTimeView);
-        tempView.setText(t.getArrivalTime());
+        tempView.setText(String.valueOf(t.getDueTime()));
         tempView.setTag(position); //Tag the button with it's position in the list
 
         return convertView;
