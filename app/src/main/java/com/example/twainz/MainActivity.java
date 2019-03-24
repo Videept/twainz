@@ -15,11 +15,13 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity{
 
+    Database mdatabase;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mdatabase = new Database(this); //object of Database class
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
