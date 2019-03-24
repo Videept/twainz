@@ -17,7 +17,8 @@ public class MainActivity extends AppCompatActivity{
 
     Database mdatabase;
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
+//    private ViewPager mViewPager;
+    private CustomViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,8 +129,10 @@ public class MainActivity extends AppCompatActivity{
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    return new stationList();
+                    return new JourneyPlanner();
                 case 1:
+                    return new stationList();
+                case 2:
                     return new Twitter();
                 default:
                     return null;
@@ -138,16 +141,18 @@ public class MainActivity extends AppCompatActivity{
 
         @Override
         public int getCount() {
-            // Show 2 total pages.
-            return 2;
+            // Show 3 total pages.
+            return 3;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Stations";
+                    return "Journey";
                 case 1:
+                    return "Stations";
+                case 2:
                     return "Twitter";
                 default:
                     return null;
