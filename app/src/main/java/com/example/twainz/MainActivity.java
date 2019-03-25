@@ -15,13 +15,11 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity{
 
-    Database mdatabase;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mdatabase = new Database(this); //object of Database class
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -37,7 +35,7 @@ public class MainActivity extends AppCompatActivity{
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
-
+        mViewPager.setCurrentItem(1);
     }
 
     @Override
@@ -56,7 +54,6 @@ public class MainActivity extends AppCompatActivity{
 
 
         if (id == R.id.action_settings) {
-            Log.d("d_tag", String.valueOf(findViewById(R.id.container).getMeasuredHeight()/getResources().getDisplayMetrics().density));
             return true;
         }
 
@@ -130,6 +127,8 @@ public class MainActivity extends AppCompatActivity{
                 case 0:
                     return new stationList();
                 case 1:
+                    return new Favourites();
+                case 2:
                     return new Twitter();
                 default:
                     return null;
@@ -139,7 +138,7 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public int getCount() {
             // Show 2 total pages.
-            return 2;
+            return 3;
         }
 
         @Override
@@ -148,6 +147,8 @@ public class MainActivity extends AppCompatActivity{
                 case 0:
                     return "Stations";
                 case 1:
+                    return "Favourites";
+                case 2:
                     return "Twitter";
                 default:
                     return null;
