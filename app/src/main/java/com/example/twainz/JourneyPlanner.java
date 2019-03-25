@@ -161,6 +161,19 @@ public class JourneyPlanner extends Fragment {
         return journeyView;
     }
 
+            android.support.v4.app.FragmentManager childManager = getFragmentManager();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   //Begin the fragment change
+            Fragment fragment = new Linerun();   //Initialise the new fragment
+
+            Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
+                fragmentData.putString(((Linerun) fragment).DATA_RECEIVE, String.valueOf(position));
+                fragment.setArguments(fragmentData);
+
+                fragmentTransaction.replace(R.id.constraintLayout2
+                        , fragment);   //Replace listConstraintLayout with the new fragment
+                fragmentTransaction.addToBackStack(null);   //Add the previous fragment to the stack so the back button works
+                fragmentTransaction.commit();   //Complete the fragment transactio
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);

@@ -51,6 +51,15 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="176dp" />
 
+    <fragment
+        android:id="@+id/fragment"
+        android:name="com.example.twainz.JourneyPlanner"
+        android:layout_width="408dp"
+        android:layout_height="508dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="69dp" />
+
     <!--<fragment-->
         <!--android:id="@+id/fragment"-->
         <!--android:name="com.example.twainz.stationInformationActivity"-->
