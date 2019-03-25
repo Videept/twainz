@@ -48,6 +48,9 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         Bundle args = getArguments();
         tf.retrieveTrainsAtStation(args.getString(DATA_RECEIVE),args.getInt(INDEX_RECIEVE) );
 
+        // Call train filter function
+        //
+
         ((MainActivity)getActivity()).setActionBarTitle(args.getString(DATA_RECEIVE));
 
         //Get the current time

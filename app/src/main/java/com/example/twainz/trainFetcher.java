@@ -283,6 +283,28 @@ public class trainFetcher {
         return sList;
     }
 
+    private void filterByDestination(String origin, String destination, String date){
+        // For each train at current station
+        for (train tr : trainList) {
+            // Empty vector for storing all stations on route
+            Vector<LinerunStation> temp = new Vector<>();
+            // Populate vector with stations
+            getLineRun(temp, tr.id, date, origin);
+            // Flag if destination on route
+            boolean isOnRoute = false;
+            // Check each station on route
+            for (LinerunStation st : temp){
+                // If current train is serving destination station
+                if(destination.equals(st.location)){
+                    isOnRoute = true;
+                    break;
+                }
+            }
+            // Remove train if destination isn't on route
+            if(!isOnRoute){ trainList.remove(tr); }
+        }
+    }
+
     class station{
         protected String stationName;
         protected String stationCode;
