@@ -1,5 +1,6 @@
 package com.example.twainz;
 
+import android.location.Location;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.android.gms.maps.MapView;
 
 
 public class MainActivity extends AppCompatActivity{
@@ -129,6 +132,8 @@ public class MainActivity extends AppCompatActivity{
                     return new stationList();
                 case 1:
                     return new Twitter();
+                case 2:
+                    return new MapsActivity();
                 default:
                     return null;
             }
@@ -137,7 +142,7 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public int getCount() {
             // Show 2 total pages.
-            return 2;
+            return 3;
         }
 
         @Override
@@ -147,6 +152,8 @@ public class MainActivity extends AppCompatActivity{
                     return "Stations";
                 case 1:
                     return "Twitter";
+                case 2:
+                    return "Near Me";
                 default:
                     return null;
             }
