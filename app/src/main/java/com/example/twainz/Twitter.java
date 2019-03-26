@@ -1,6 +1,5 @@
 package com.example.twainz;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,26 +10,27 @@ import twitter4j.conf.ConfigurationBuilder;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class Twitter extends Fragment {
     private List<Status> status;
+    private List<TwitterPost> posts;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.twitter_display, container, false);
         status = new ArrayList<Status>();
+        posts = new ArrayList<>();
 
         //Extract the station name from the intent which started the activity
         printTweets();
 
-        TextView textView = rootView.findViewById(R.id.twitterListLayout);
+        ListView listView = rootView.findViewById(R.id.twitterListLayout);
 
         String combinedTweets = "";
 
@@ -38,10 +38,13 @@ public class Twitter extends Fragment {
             String newTweet = s.getCreatedAt().toString();
             String[] DateParts = newTweet.split(" ");
             String[] TimeParts = DateParts[3].split(":");
-            combinedTweets = combinedTweets + TimeParts[0] + ":" + TimeParts[1] + " " + DateParts[0] + " " + DateParts[2]+ "\n\n" +s.getText()+ "\n\n"+"------------------------------------------------------------------------------" + "\n\n";
+            //combinedTweets = combinedTweets + TimeParts[0] + ":" + TimeParts[1] + " " + DateParts[0] + " " + DateParts[2]+ "\n\n" +s.getText()+ "\n\n"+"------------------------------------------------------------------------------" + "\n\n";
+            TwitterPost twitterPost = new TwitterPost(TimeParts[0] + ":" + TimeParts[1],DateParts[0] + " " + DateParts[2],s.getText());
+            posts.add(twitterPost);
         }
 
-        textView.setText(combinedTweets);
+        TwitterAdapter twitterAdapter = new TwitterAdapter(getContext(),posts);
+        listView.setAdapter(twitterAdapter);
         return rootView;
     }
 
