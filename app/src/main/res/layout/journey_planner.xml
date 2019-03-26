@@ -49,20 +49,31 @@
             android:gravity="center"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="Destination"
+            android:text="Belfast Central"
             android:textSize="36sp" />
 
     </LinearLayout>
 
 
-    <!--<fragment-->
-        <!--android:id="@+id/fragment"-->
-        <!--android:name="com.example.twainz.stationInformationActivity"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--app:layout_constraintTop_toBottomOf="@id/textView_orig"-->
-        <!--app:layout_constraintBottom_toTopOf="@id/journeyDialog"-->
-        <!--tools:layout_editor_absoluteX="191dp"-->
-        <!--tools:layout_editor_absoluteY="306dp" />-->
+    <TextView
+        android:id="@+id/textView_orig"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="Dublin Connolly"
+        android:textSize="36sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="176dp" />
+  
+    <FrameLayout
+        android:id="@+id/fragFrame"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/journeyDialog"
+        app:layout_constraintTop_toBottomOf="@id/textView_orig"
+        tools:layout_editor_absoluteX="8dp" />
 
 </android.support.constraint.ConstraintLayout>

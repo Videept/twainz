@@ -53,7 +53,9 @@ public class stationList extends Fragment  {
                 if(!searchbar.getText().toString().equals("")) {
                     position = tf.getStationList().indexOf(list.get(position));
                 }
-                fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECIEVE, position);
+                fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECEIVE, position);
+                fragmentData.putString(((stationInformationActivity) fragment).IS_JOURNEY_PLANNER, "false");
+                Log.i("TESTING", "onCreateView: stationList");
                 fragment.setArguments(fragmentData);
 
                 fragmentTransaction.replace(R.id.listConstraintLayout, fragment);   //Replace listConstraintLayout with the new fragment

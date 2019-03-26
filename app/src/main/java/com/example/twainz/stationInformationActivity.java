@@ -34,7 +34,9 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
 
 
     final static String DATA_RECEIVE = "data_receive";
-    final static String INDEX_RECIEVE = "index_receive";
+    final static String INDEX_RECEIVE = "index_receive";
+    final static String IS_JOURNEY_PLANNER = "is_journey_planner";
+    final static String DEST_STATION = "dest_station";
 
     @Nullable
     @Override
@@ -46,7 +48,7 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
 
         //Using the trainFetcher to retrieve the data for the station
         Bundle args = getArguments();
-        tf.retrieveTrainsAtStation(args.getString(DATA_RECEIVE),args.getInt(INDEX_RECIEVE) );
+        tf.retrieveTrainsAtStation(args.getString(DATA_RECEIVE),args.getInt(INDEX_RECEIVE) );
 
         ((MainActivity)getActivity()).setActionBarTitle(args.getString(DATA_RECEIVE));
 
@@ -57,6 +59,14 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         //Display the current time
         TextView displayRefresh = rootView.findViewById(R.id.refreshView);
         displayRefresh.setText("Updated at " + time.format(calender.getTime()));
+
+        // If fragment is open in Journey Planner
+        if(args.getString(IS_JOURNEY_PLANNER).equals("true")) {
+            // Call train filter function
+            Log.i("TESTING", "onCreateView: true" + args.getString(IS_JOURNEY_PLANNER));
+            tf.filterByDestination(args.getString(DATA_RECEIVE), args.getString(DEST_STATION));
+        }
+        else{ Log.i("TESTING", "onCreateView: false" + args.getString(IS_JOURNEY_PLANNER)); }
 
         trainList = new ArrayList<trainFetcher.train>(tf.getTrains());
 
@@ -87,7 +97,6 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
             }
         });
 
-
         return rootView;
 
     }
@@ -109,7 +118,15 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
     @Override
     public void onRefresh() {
         Bundle args = getArguments();
-        tf.retrieveTrainsAtStation(args.getString(DATA_RECEIVE),args.getInt(INDEX_RECIEVE) );
+        tf.retrieveTrainsAtStation(args.getString(DATA_RECEIVE),args.getInt(INDEX_RECEIVE) );
+
+        // If fragment is open in Journey Planner
+        if(args.getString(IS_JOURNEY_PLANNER).equals("true")) {
+            // Call train filter function
+            Log.i("TESTING", "onRefresh: true" + args.getString(IS_JOURNEY_PLANNER));
+            tf.filterByDestination(args.getString(DATA_RECEIVE), args.getString(DEST_STATION));
+        }
+        else{ Log.i("TESTING", "onRefresh: false" + args.getString(IS_JOURNEY_PLANNER)); }
 
         //Clear the array list and update the data set.
         trainList.clear();
