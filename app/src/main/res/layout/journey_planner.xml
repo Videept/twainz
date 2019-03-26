@@ -33,7 +33,7 @@
             android:gravity="center"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="Destination"
+            android:text="Belfast Central"
             android:textSize="36sp" />
 
     </LinearLayout>
@@ -46,7 +46,7 @@
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:text="Origin"
+        android:text="Dublin Connolly"
         android:textSize="36sp"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="176dp" />
@@ -54,7 +54,7 @@
     <FrameLayout
         android:id="@+id/fragFrame"
         android:layout_width="match_parent"
-        android:layout_height="491dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/journeyDialog"
         app:layout_constraintTop_toBottomOf="@id/textView_orig"
         tools:layout_editor_absoluteX="8dp" />

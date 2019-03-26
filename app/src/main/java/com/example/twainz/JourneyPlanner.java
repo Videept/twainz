@@ -15,8 +15,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import static android.content.ContentValues.TAG;
-
 public class JourneyPlanner extends Fragment {
 
     @Nullable
@@ -35,20 +33,21 @@ public class JourneyPlanner extends Fragment {
         ArrayList<String> listOfStations;
         final trainFetcher tf = new trainFetcher(getContext());
         listOfStations = new ArrayList<>(tf.getStationList());
-        int position = 0;
-        String search = listOfStations.get(position);
-        Log.i(TAG, "onCreateView: " + search);
+        int position = listOfStations.indexOf(textOrig.getText().toString());
 
         // Fragment stuff
 
-        android.support.v4.app.FragmentManager childManager = getFragmentManager();
+        android.support.v4.app.FragmentManager childManager = getChildFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   // Begin the fragment change
         Fragment fragment = new stationInformationActivity();                                               // Initialise the new fragment
 
         Bundle fragmentData = new Bundle();                     // Bundle passes position of selected train to Linerun fragment
-        fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, search);
+        fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, textOrig.getText().toString());
         position = tf.getStationList().indexOf(listOfStations.get(position));
-        fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECIEVE, position);
+        fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECEIVE, position);
+        Log.i("TESTING", "onCreateView: JourneyPlanner");
+        fragmentData.putString(((stationInformationActivity) fragment).IS_JOURNEY_PLANNER, "true");
+        fragmentData.putString(((stationInformationActivity) fragment).DEST_STATION, textDest.getText().toString());
         fragment.setArguments(fragmentData);
 
         fragmentTransaction.replace(R.id.fragFrame, fragment);  // Replace listConstraintLayout with the new fragment

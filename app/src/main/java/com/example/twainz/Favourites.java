@@ -45,7 +45,7 @@ public class Favourites extends Fragment {
                 Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
                 fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, list.get(position));
                 fragment.setArguments(fragmentData);
-                fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECIEVE, position);
+                fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECEIVE, position);
                 fragment.setArguments(fragmentData);
 
                 fragmentTransaction.replace(R.id.listConstraintLayout, fragment);   //Replace listConstraintLayout with the new fragment

@@ -247,6 +247,40 @@ public class trainFetcher {
         return null;
     }
 
+    // Filters out trains at current station that don't stop at another specified station
+    public void filterByDestination(String origin, String destination){
+        // Empty vector for storing trains to be filtered out (removed)
+        Vector<train> deleteTrains = new Vector<>();
+        // For each train at current station
+        for (train tr : trainList) {
+            // Empty vector for storing all stations on route
+            Vector<LinerunStation> tempStations = new Vector<>();
+            // Populate vector with stations
+            getLineRun(tempStations, tr.id, tr.date, origin);
+            // Flag if destination on route
+            boolean isOnRoute = false;
+            String start = "START";
+            // If first station is destination then guaranteed on route
+            if(tempStations.get(0).location.equals(tr.destination)){ continue; }
+            // Check each station on route
+            for (LinerunStation st : tempStations){
+                Log.i("STATIONS_FILTER", st.location);
+                if(start.equals("START")){ start = st.location; }
+                if(destination.equals(st.location)){}
+                // If current train is serving destination station
+                if(destination.equals(st.location)){
+                    isOnRoute = true;
+                    break;
+                }
+            }
+            Log.i("TRAINS_FILTER", "[" + destination + "] " + start + " " + tr.getDestination() + " " + isOnRoute);
+            // Flag train for filtering if destination isn't on route
+            if(!isOnRoute){ deleteTrains.add(tr); }
+        }
+        // Remove filtered trains
+        trainList.removeAll(deleteTrains);
+    }
+
     private Vector<station> readStationFromXML(){
         InputStream stationFile = context.getResources().openRawResource(context.getResources().getIdentifier("station_list",
                         "raw", context.getPackageName()));
@@ -281,28 +315,6 @@ public class trainFetcher {
 
         }
         return sList;
-    }
-
-    private void filterByDestination(String origin, String destination, String date){
-        // For each train at current station
-        for (train tr : trainList) {
-            // Empty vector for storing all stations on route
-            Vector<LinerunStation> temp = new Vector<>();
-            // Populate vector with stations
-            getLineRun(temp, tr.id, date, origin);
-            // Flag if destination on route
-            boolean isOnRoute = false;
-            // Check each station on route
-            for (LinerunStation st : temp){
-                // If current train is serving destination station
-                if(destination.equals(st.location)){
-                    isOnRoute = true;
-                    break;
-                }
-            }
-            // Remove train if destination isn't on route
-            if(!isOnRoute){ trainList.remove(tr); }
-        }
     }
 
     class station{
