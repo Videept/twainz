@@ -10,11 +10,14 @@
         android:id="@+id/journeyDialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="516dp"
         android:background="@color/colorPrimary"
         android:orientation="vertical"
         android:paddingTop="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent">
 
         <!--android:background="?android:selectableItemBackground"-->
 
@@ -25,6 +28,19 @@
             android:layout_gravity="center_horizontal"
             android:background="@null"
             app:srcCompat="@mipmap/twainz_icon_round" />
+
+        <TextView
+            android:id="@+id/textView_orig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Origin"
+            android:textSize="36sp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="176dp" />
 
         <TextView
             android:id="@+id/textView_dest"
@@ -38,6 +54,7 @@
 
     </LinearLayout>
 
+
     <TextView
         android:id="@+id/textView_orig"
         android:layout_width="match_parent"
@@ -50,7 +67,7 @@
         android:textSize="36sp"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="176dp" />
-
+  
     <FrameLayout
         android:id="@+id/fragFrame"
         android:layout_width="match_parent"

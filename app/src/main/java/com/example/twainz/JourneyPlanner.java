@@ -11,12 +11,13 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import java.util.Vector;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class JourneyPlanner extends Fragment {
-
+    static private Vector<String> Message;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class JourneyPlanner extends Fragment {
         ImageButton buttonDir = journeyView.findViewById(R.id.changeDirButton);
 
         Animation shake = AnimationUtils.loadAnimation(journeyView.getContext(), R.anim.shake);
+
 
         ArrayList<String> listOfStations;
         final trainFetcher tf = new trainFetcher(getContext());
@@ -55,7 +57,6 @@ public class JourneyPlanner extends Fragment {
         fragmentTransaction.commit();                           // Complete the fragment transaction
 
         // End of fragment stuff
-
         buttonDir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

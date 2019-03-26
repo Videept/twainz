@@ -44,7 +44,6 @@ public class Database extends SQLiteOpenHelper{
     public void deleteData(String station)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-       // db.delete(table_name, columnID + "= '" + String.valueOf(uid) + "'", );
         String[] whereArgs = {station};
         db.delete(table_name, column2 + " = ?",whereArgs);
         db.close();
