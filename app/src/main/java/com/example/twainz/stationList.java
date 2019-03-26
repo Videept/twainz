@@ -23,7 +23,7 @@ public class stationList extends Fragment  {
     private ListView mListView;
     private View rootView;
     private static ArrayList<String> list;  //had to make this static to avoid having to make it final
-                                            //(it would otherwise have to be final inside the textwatcher
+                                                //(it would otherwise have to be final inside the textwatcher
 
     @Nullable
     @Override
@@ -94,7 +94,6 @@ public class stationList extends Fragment  {
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser && isAdded()) {
             ((MainActivity)getActivity()).setActionBarTitle(getResources().getString(R.string.app_name));
-            Log.d("D", "Station list called");
         }
     }
 

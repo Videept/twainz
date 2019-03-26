@@ -45,8 +45,7 @@ public class Linerun extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser && isAdded()) {
-            ((MainActivity)getActivity()).setActionBarTitle("Line run test string");
-            Log.d("D", "Line run called");
+            ((MainActivity)getActivity()).setActionBarTitle("Line Run");
         }
     }
 

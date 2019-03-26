@@ -19,7 +19,8 @@ import com.google.android.gms.maps.MapView;
 public class MainActivity extends AppCompatActivity{
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
+//    private ViewPager mViewPager;
+    private CustomViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity{
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
-
+        mViewPager.setCurrentItem(1);
     }
 
     @Override
@@ -129,10 +130,14 @@ public class MainActivity extends AppCompatActivity{
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    return new stationList();
+                    return new JourneyPlanner();
                 case 1:
-                    return new Twitter();
+                    return new stationList();
                 case 2:
+                    return new Favourites();
+                case 3:
+                    return new Twitter();
+                case 4:
                     return new MapsActivity();
                 default:
                     return null;
@@ -142,17 +147,21 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public int getCount() {
             // Show 2 total pages.
-            return 3;
+            return 5;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Stations";
+                    return "Journey";
                 case 1:
-                    return "Twitter";
+                    return "Stations";
                 case 2:
+                    return "Favourites";
+                case 3:
+                    return "Twitter";
+                case 4:
                     return "Near Me";
                 default:
                     return null;
