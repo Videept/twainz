@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -38,6 +41,11 @@ public class TwitterAdapter extends ArrayAdapter<TwitterPost> {
         ((TextView) convertView.findViewById(R.id.date)).setText(twitterPost.getDate());
         ((TextView) convertView.findViewById(R.id.hour)).setText(twitterPost.getHour());
         ((TextView) convertView.findViewById(R.id.twitterContent)).setText(twitterPost.getContent());
+        if(twitterPost.getImageUrl()!=null){
+            Picasso.get().load(twitterPost.getImageUrl()).into((ImageView) convertView.findViewById(R.id.twitterImage));
+        } else {
+            ((ImageView) convertView.findViewById(R.id.twitterImage)).setMaxHeight(0);
+        }
         return convertView;
     }
 }
