@@ -108,7 +108,6 @@ public class stationList extends Fragment  {
         for (String str : list){
             if(str.contains(s) || str.contains(s.toString().toUpperCase())) {
                 results.add(str);
-                Log.d("d_tag", str);
             }
         }
         return results;

@@ -3,6 +3,7 @@ package com.example.twainz;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.icu.text.SimpleDateFormat;
+import android.media.MediaPlayer;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
@@ -15,6 +16,8 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
@@ -239,6 +242,8 @@ public class trainFetcher {
                 e.printStackTrace();
             }
 
+            Collections.sort(trainList);
+
             return trainList;
 
         }
@@ -246,6 +251,7 @@ public class trainFetcher {
         Log.e("Error", "Station name doesnt exist. Couldnt get data");
         return null;
     }
+
 
     private Vector<station> readStationFromXML(){
         InputStream stationFile = context.getResources().openRawResource(context.getResources().getIdentifier("station_list",
@@ -291,7 +297,7 @@ public class trainFetcher {
         protected int stationId;
     }
 
-    class train{
+    public class train implements Comparable<train>{
         protected String arrivalTime;
         protected int delay;
         protected String destination;
@@ -315,6 +321,27 @@ public class trainFetcher {
         public String getId(){ return id; }
         public String getDate(){ return date; }
         public byte getDueTime(){ return dueTime; }
+
+        @Override
+        public int compareTo(train o) {
+
+            String total = "";
+            String total_i = "";
+            char[] charray = o.arrivalTime.toCharArray();
+            if(charray[0]  == '0' && charray[1] == '0') {
+                charray[0] = '2';
+                charray[1] = '5';
+                }
+            total += charray[0] + charray[1] + charray[3] + charray[4];
+            char[] charray_i = arrivalTime.toCharArray();
+            if(charray_i[0]  == '0' && charray[1] == '0') {
+                charray_i[0] = '2';
+                charray_i[1] = '5';
+            }
+            total_i += charray_i[0] + charray_i[1] + charray_i[3] + charray_i[4];
+
+            return total_i.compareTo(total);
+        }
     }
 
 

@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity{
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
-        mViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(2);
     }
 
     @Override
@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity{
 
 
         if (id == R.id.action_settings) {
-            Log.d("d_tag", String.valueOf(findViewById(R.id.container).getMeasuredHeight()/getResources().getDisplayMetrics().density));
             return true;
         }
 
