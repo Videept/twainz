@@ -63,12 +63,10 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         // If fragment is open in Journey Planner
         if(args.getString(IS_JOURNEY_PLANNER).equals("true")) {
             // Call train filter function
-            Log.i("TESTING", "onCreateView: true" + args.getString(IS_JOURNEY_PLANNER));
             tf.filterByDestination(args.getString(DATA_RECEIVE), args.getString(DEST_STATION));
         }
-        else{ Log.i("TESTING", "onCreateView: false" + args.getString(IS_JOURNEY_PLANNER)); }
 
-        trainList = new ArrayList<trainFetcher.train>(tf.getTrains());
+        trainList = new ArrayList<>(tf.getTrains());
 
         adapter = new trainAdapter(rootView.getContext(), trainList);
 
@@ -79,9 +77,7 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         SwipeRefreshLayout refresh = rootView.findViewById(R.id.swipeRefresh);
         refresh.setOnRefreshListener(this);
 
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        lv.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
                 android.support.v4.app.FragmentManager childManager = getFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   //Begin the fragment change
                 Fragment fragment = new Linerun();   //Initialise the new fragment
@@ -94,7 +90,6 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
                         , fragment);   //Replace listConstraintLayout with the new fragment
                 fragmentTransaction.addToBackStack(null);   //Add the previous fragment to the stack so the back button works
                 fragmentTransaction.commit();   //Complete the fragment transaction
-            }
         });
 
         return rootView;
@@ -109,12 +104,14 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
             ((MainActivity)getActivity()).setActionBarTitle(args.getString(DATA_RECEIVE));
         }
     }
+
     @Override
     public void onResume(){
         Bundle args = getArguments();
         ((MainActivity)getActivity()).setActionBarTitle(args.getString(DATA_RECEIVE));
         super.onResume();
     }
+
     @Override
     public void onRefresh() {
         Bundle args = getArguments();
@@ -123,10 +120,8 @@ public class stationInformationActivity extends Fragment implements SwipeRefresh
         // If fragment is open in Journey Planner
         if(args.getString(IS_JOURNEY_PLANNER).equals("true")) {
             // Call train filter function
-            Log.i("TESTING", "onRefresh: true" + args.getString(IS_JOURNEY_PLANNER));
             tf.filterByDestination(args.getString(DATA_RECEIVE), args.getString(DEST_STATION));
         }
-        else{ Log.i("TESTING", "onRefresh: false" + args.getString(IS_JOURNEY_PLANNER)); }
 
         //Clear the array list and update the data set.
         trainList.clear();

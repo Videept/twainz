@@ -4,7 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <LinearLayout
         android:id="@+id/journeyDialog"
@@ -22,36 +24,44 @@
 
         <ImageButton
             android:id="@+id/changeDirButton"
+            android:contentDescription="@string/swap_directions_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:background="@null"
             app:srcCompat="@mipmap/twainz_icon_round" />
 
-        <TextView
-            android:id="@+id/textView_dest"
+        <AutoCompleteTextView
+            android:id="@+id/editText_dest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:gravity="center"
+            android:hint="Destination"
+            android:inputType="textNoSuggestions"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="Belfast Central"
-            android:textSize="36sp" />
+            android:text="Dublin Pearse"
+            android:textSize="36sp"
+            tools:ignore="Autofill" />
 
     </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/textView_orig"
+    <AutoCompleteTextView
+        android:id="@+id/editText_orig"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:gravity="center"
+        android:hint="Origin"
+        android:inputType="textNoSuggestions"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:text="Dublin Connolly"
+        android:text="Sandycove"
         android:textSize="36sp"
         app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="Autofill"
         tools:layout_editor_absoluteX="176dp" />
   
     <FrameLayout
@@ -59,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/journeyDialog"
-        app:layout_constraintTop_toBottomOf="@id/textView_orig"
+        app:layout_constraintTop_toBottomOf="@id/editText_orig"
         tools:layout_editor_absoluteX="8dp" />
 
 </android.support.constraint.ConstraintLayout>

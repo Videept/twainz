@@ -6,12 +6,20 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageButton;
+
+import java.util.List;
 import java.util.Vector;
+
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -25,8 +33,8 @@ public class JourneyPlanner extends Fragment {
         View journeyView = inflater.inflate(R.layout.journey_planner, container, false);
 
         // Layout view objects
-        TextView textDest = journeyView.findViewById(R.id.textView_dest);
-        TextView textOrig = journeyView.findViewById(R.id.textView_orig);
+        AutoCompleteTextView textDest = journeyView.findViewById(R.id.editText_dest);
+        AutoCompleteTextView textOrig = journeyView.findViewById(R.id.editText_orig);
         ImageButton buttonDir = journeyView.findViewById(R.id.changeDirButton);
 
         // Animation for switch direction button
@@ -38,16 +46,19 @@ public class JourneyPlanner extends Fragment {
         listOfStations = new ArrayList<>(tf.getStationList());
         int position = listOfStations.indexOf(textOrig.getText().toString());
 
+        // Set up autocomplete with from list of train stations
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(journeyView.getContext(),android.R.layout.simple_dropdown_item_1line,listOfStations);
+        textDest.setAdapter(adapter);
+        textOrig.setAdapter(adapter);
+
         // Fragment stuff
         android.support.v4.app.FragmentManager childManager = getChildFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   // Begin the fragment change
         Fragment fragment = new stationInformationActivity();                                               // Initialise the new fragment
 
-        Bundle fragmentData = new Bundle();                     // Bundle passes position of selected train to Linerun fragment
+        Bundle fragmentData = new Bundle();                     // Bundle passes position of selected train to Line-run fragment
         fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, textOrig.getText().toString());
-        position = tf.getStationList().indexOf(listOfStations.get(position));
         fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECEIVE, position);
-        Log.i("TESTING", "onCreateView: JourneyPlanner");
         fragmentData.putString(((stationInformationActivity) fragment).IS_JOURNEY_PLANNER, "true");
         fragmentData.putString(((stationInformationActivity) fragment).DEST_STATION, textDest.getText().toString());
         fragment.setArguments(fragmentData);
@@ -58,21 +69,22 @@ public class JourneyPlanner extends Fragment {
 
         // Button listener for switching direction
         buttonDir.setOnClickListener((View v) -> {
+            textDest.clearFocus();
+            textOrig.clearFocus();
             v.startAnimation(shake);
-            CharSequence temp = textDest.getText();
-            textDest.setText(textOrig.getText());
-            textOrig.setText(temp);
+            fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, textOrig.getText().toString());
+            fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECEIVE, listOfStations.indexOf(textOrig.getText().toString()));
+            fragmentData.putString(((stationInformationActivity) fragment).DEST_STATION, textDest.getText().toString());
+            fragment.setArguments(fragmentData);
+            ((stationInformationActivity) fragment).onRefresh();
         });
 
-//        buttonDir.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                v.startAnimation(shake);
-//                CharSequence temp = textDest.getText();
-//                textDest.setText(textOrig.getText());
-//                textOrig.setText(temp);
-//            }
-//        });
+        buttonDir.setOnLongClickListener((View v) -> {
+                CharSequence temp = textDest.getText();
+                textDest.setText(textOrig.getText());
+                textOrig.setText(temp);
+                return false;
+        });
 
         return journeyView;
     }

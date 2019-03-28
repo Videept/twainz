@@ -15,6 +15,7 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
@@ -257,25 +258,15 @@ public class trainFetcher {
             Vector<LinerunStation> tempStations = new Vector<>();
             // Populate vector with stations
             getLineRun(tempStations, tr.id, tr.date, origin);
-            // Flag if destination on route
-            boolean isOnRoute = false;
-            String start = "START";
-            // If first station is destination then guaranteed on route
-            if(tempStations.get(0).location.equals(tr.destination)){ continue; }
+            // Ensure iteration direction is against train direction
+            if(!tempStations.get(0).location.equals(tr.destination)){ Collections.reverse(tempStations); }
             // Check each station on route
             for (LinerunStation st : tempStations){
-                Log.i("STATIONS_FILTER", st.location);
-                if(start.equals("START")){ start = st.location; }
-                if(destination.equals(st.location)){}
-                // If current train is serving destination station
-                if(destination.equals(st.location)){
-                    isOnRoute = true;
-                    break;
-                }
+                // If destination is after (or at) origin station
+                if(destination.equals(st.location)){ break; }
+                // If destination is behind origin station
+                if(origin.equals(st.location)){ deleteTrains.add(tr); break; }
             }
-            Log.i("TRAINS_FILTER", "[" + destination + "] " + start + " " + tr.getDestination() + " " + isOnRoute);
-            // Flag train for filtering if destination isn't on route
-            if(!isOnRoute){ deleteTrains.add(tr); }
         }
         // Remove filtered trains
         trainList.removeAll(deleteTrains);
