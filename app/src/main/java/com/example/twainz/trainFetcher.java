@@ -248,7 +248,7 @@ public class trainFetcher {
     }
 
     // Filters out trains at current station that don't stop at another specified station
-    public void filterByDestination(String origin, String destination){
+    void filterByDestination(String origin, String destination){
         // Empty vector for storing trains to be filtered out (removed)
         Vector<train> deleteTrains = new Vector<>();
         // For each train at current station
