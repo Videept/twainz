@@ -1,6 +1,7 @@
 package com.example.twainz;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,9 +34,11 @@ public class Favourites extends Fragment {
         trainFetcher tf = new trainFetcher(rootView.getContext());
         //TODO: the list of all stations is just initialised for testing purposes
         String test = tf.getStationList().get(0);
-        mDatabase.deleteData(test);   //comment or uncommecnt these two lines for testing purposes
+        Cursor cursor = mDatabase.displayfavourites();
+        mDatabase.deleteData(test);   //comment or uncomment these two lines for testing purposes
         mDatabase.insertData(test);
         ArrayList<String> list = /* new ArrayList<>(tf.getStationList());*/mDatabase.getFavouritesList();
+
 
 
 
@@ -68,6 +71,8 @@ public class Favourites extends Fragment {
         return rootView;
     }
 
+    // 
+    // public void insertData(String )
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
