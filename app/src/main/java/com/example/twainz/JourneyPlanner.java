@@ -37,8 +37,9 @@ public class JourneyPlanner extends Fragment {
         AutoCompleteTextView textOrig = journeyView.findViewById(R.id.editText_orig);
         ImageButton buttonDir = journeyView.findViewById(R.id.changeDirButton);
 
-        // Animation for switch direction button
+        // Animation for switch direction button and enter
         Animation shake = AnimationUtils.loadAnimation(journeyView.getContext(), R.anim.shake);
+        Animation full_rotate = AnimationUtils.loadAnimation(journeyView.getContext(), R.anim.full_rotate);
 
         // Populate array with all stations and get position of origin station
         ArrayList<String> listOfStations;
@@ -67,11 +68,14 @@ public class JourneyPlanner extends Fragment {
         fragmentTransaction.addToBackStack(null);               // Add the previous fragment to the stack so the back button works
         fragmentTransaction.commit();                           // Complete the fragment transaction
 
-        // Button listener for switching direction
+        // Button listener for entering stations
         buttonDir.setOnClickListener((View v) -> {
+            // Clear cursor and focus from EditTexts
             textDest.clearFocus();
             textOrig.clearFocus();
+            // Start "enter" animation
             v.startAnimation(shake);
+            // Enter current stations into fragment and reload
             fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, textOrig.getText().toString());
             fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECEIVE, listOfStations.indexOf(textOrig.getText().toString()));
             fragmentData.putString(((stationInformationActivity) fragment).DEST_STATION, textDest.getText().toString());
@@ -79,11 +83,18 @@ public class JourneyPlanner extends Fragment {
             ((stationInformationActivity) fragment).onRefresh();
         });
 
+        // Button listener for switching direction
         buttonDir.setOnLongClickListener((View v) -> {
-                CharSequence temp = textDest.getText();
-                textDest.setText(textOrig.getText());
-                textOrig.setText(temp);
-                return false;
+            // Clear cursor and focus from EditTexts
+            textDest.clearFocus();
+            textOrig.clearFocus();
+            // Start "switch direction" animation
+            v.startAnimation(full_rotate);
+            // Swap stations in EditTexts
+            CharSequence temp = textDest.getText();
+            textDest.setText(textOrig.getText());
+            textOrig.setText(temp);
+            return true;
         });
 
         return journeyView;
