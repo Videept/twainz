@@ -34,7 +34,10 @@ public class Favourites extends Fragment {
         trainFetcher tf = new trainFetcher(rootView.getContext());
         //TODO: the list of all stations is just initialised for testing purposes
         String test = tf.getStationList().get(0);
-        Cursor cursor = mDatabase.displayfavourites();
+        ArrayList array_list = mDatabase.displayfavourites();
+        ArrayAdapter arrayAdapter=new ArrayAdapter(rootView.getContext(),android.R.layout.simple_list_item_1,array_list);
+        mListView.setAdapter(arrayAdapter);
+
         mDatabase.deleteData(test);   //comment or uncomment these two lines for testing purposes
         mDatabase.insertData(test);
         ArrayList<String> list = /* new ArrayList<>(tf.getStationList());*/mDatabase.getFavouritesList();

@@ -30,13 +30,19 @@ public class Database extends SQLiteOpenHelper {
 
         db.execSQL(createTable);
     }
-    public Cursor displayfavourites(){
-        SQLiteDatabase database = this.getWritableDatabase();
-        Cursor cursor = database.rawQuery("SELECT * FROM " + table_name, null);
-//        cursor.close();
-//        database.close();
-        return cursor;
-    }
+
+public ArrayList<String> displayfavourites(){
+        ArrayList<String> array_list = new ArrayList<String>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "+ table_name,null);
+        cursor.moveToFirst();
+        while(cursor.moveToLast()==false){
+            array_list.add(cursor.getString(cursor.getColumnIndex(column2)));
+            cursor.moveToNext();
+        }
+        return array_list;
+}
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -46,11 +52,6 @@ public class Database extends SQLiteOpenHelper {
 
     public void insertData(String Station) {
         SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(column2, Station);
-        //insert into table
-        db.insert(table_name, null, contentValues);
         db.close();
     }
 
