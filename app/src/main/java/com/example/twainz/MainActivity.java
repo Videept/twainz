@@ -22,6 +22,13 @@ public class MainActivity extends AppCompatActivity{
 //    private ViewPager mViewPager;
     private CustomViewPager mViewPager;
 
+    final int[] ICONS = new int[]{
+            R.drawable.journey,
+            R.drawable.station,
+            R.drawable.favourite,
+            R.drawable.twitter,
+            R.drawable.nearme};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +46,11 @@ public class MainActivity extends AppCompatActivity{
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.getTabAt(0).setIcon(ICONS[0]);
+        tabLayout.getTabAt(1).setIcon(ICONS[1]);
+        tabLayout.getTabAt(2).setIcon(ICONS[2]);
+        tabLayout.getTabAt(3).setIcon(ICONS[3]);
+        tabLayout.getTabAt(4).setIcon(ICONS[4]);
         mViewPager.setCurrentItem(2);
     }
 
@@ -55,12 +67,9 @@ public class MainActivity extends AppCompatActivity{
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
