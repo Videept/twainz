@@ -161,16 +161,17 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
+                //removed the names from these buttons since the icons should be descriptive enough
                 case 0:
-                    return "Journey";
+                    return "";//"Journey";
                 case 1:
-                    return "Stations";
+                    return "";//"Stations";
                 case 2:
-                    return "Favourites";
+                    return "";//"Favourites";
                 case 3:
-                    return "Twitter";
+                    return "";//"Twitter";
                 case 4:
-                    return "Near Me";
+                    return "";//"Near Me";
                 default:
                     return null;
             }

@@ -23,7 +23,11 @@ import static android.graphics.Color.rgb;
 public class Favourites extends Fragment {
 
     private View rootView;
-    private Database mDatabase;
+    public static Database mDatabase;
+    public static ArrayList<String> favourites_alist;
+    //set true if the favourites list needs to be reloaded by another class
+    // cant make this an array of ints since we need to reference the stations by station name
+
 
     @Nullable
     @Override
@@ -33,19 +37,18 @@ public class Favourites extends Fragment {
         ListView mListView = rootView.findViewById(R.id.favourites_list);
         trainFetcher tf = new trainFetcher(rootView.getContext());
         //TODO: the list of all stations is just initialised for testing purposes
-        String test = tf.getStationList().get(0);
-        ArrayList array_list = mDatabase.displayfavourites();
-        ArrayAdapter arrayAdapter=new ArrayAdapter(rootView.getContext(),android.R.layout.simple_list_item_1,array_list);
-        mListView.setAdapter(arrayAdapter);
+        //String test = tf.getStationList().get(0);
 
-        mDatabase.deleteData(test);   //comment or uncomment these two lines for testing purposes
-        mDatabase.insertData(test);
-        ArrayList<String> list = /* new ArrayList<>(tf.getStationList());*/mDatabase.getFavouritesList();
+        //mDatabase.deleteData(test);
+        //mDatabase.insertData(test);
+        favourites_alist = mDatabase.displayfavourites();
 
+        ///we dont need to change the adapter here since we need to use tha custom adapter from the favouritesListAdapter class as below
+        //ArrayAdapter arrayAdapter=new ArrayAdapter(rootView.getContext(),android.R.layout.simple_list_item_1,array_list);
+        //mListView.setAdapter(arrayAdapter);
+        //ArrayList<String> list = /* new ArrayList<>(tf.getStationList());*/mDatabase.getFavouritesList();
 
-
-
-        final com.example.twainz.favouritesListAdapter adapter = new com.example.twainz.favouritesListAdapter(rootView.getContext(), list);
+        final com.example.twainz.favouritesListAdapter adapter = new com.example.twainz.favouritesListAdapter(rootView.getContext(), favourites_alist);
 
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -57,9 +60,9 @@ public class Favourites extends Fragment {
                 Fragment fragment = new stationInformationActivity();   //Initialise the new fragment
 
                 Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
-                fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, list.get(position));
+                fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, favourites_alist.get(position));
                 fragment.setArguments(fragmentData);
-                position = tf.getStationList().indexOf(list.get(position)); //need to get new position since favourites are out of order
+                position = tf.getStationList().indexOf(favourites_alist.get(position)); //need to get new position since favourites are out of order
                 fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECIEVE, position);
                 fragment.setArguments(fragmentData);
 
@@ -88,8 +91,11 @@ public class Favourites extends Fragment {
 
 class favouritesListAdapter extends ArrayAdapter<String> {
 
-    public favouritesListAdapter(Context context, ArrayList<String> stations) {
-        super(context, 0, stations);
+    private ArrayList<String> fav_stations;
+
+    public favouritesListAdapter(Context context, ArrayList<String> parent_favourite_stations) {
+        super(context, 0, parent_favourite_stations);
+        fav_stations = parent_favourite_stations;
     }
 
     @Override
@@ -97,23 +103,30 @@ class favouritesListAdapter extends ArrayAdapter<String> {
         String station = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_view, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.favourites_view, parent, false);
         }
 
         TextView t = convertView.findViewById(R.id.stationButton);
         t.setText(station);
         t.setTag(position);
         t.setBackgroundColor(rgb(244, 129, 145));
-        CheckBox cb = convertView.findViewById(R.id.checkBox2);
+        CheckBox cb = convertView.findViewById(R.id.checkBox);
         cb.setChecked(true);
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //uncheck box
-                //remove item from listview
+            public void onClick(View view) {//uncheck box
+                cb.setChecked(false);
+                //update static favourites list for the next time its needed
+                // ( since it wont be null in the next time onCreate is called )
+
+                //remove item from listview and reload listview
+                Favourites.favourites_alist.remove(station);
+                favouritesListAdapter.super.clear();
+                favouritesListAdapter.super.addAll(Favourites.favourites_alist);
+                favouritesListAdapter.super.notifyDataSetChanged();
                 //remove item from database
-                //reload listview
-                Toast.makeText(view.getContext(), "remove this", Toast.LENGTH_SHORT).show();
+                Favourites.mDatabase.deleteData(station);
+
             }
         });
         return convertView;
