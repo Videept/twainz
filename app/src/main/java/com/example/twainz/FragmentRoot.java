@@ -25,7 +25,7 @@ public class FragmentRoot extends Fragment implements BackPressListener {
 
             if (!fragmentTitles.containsKey(this.getTag()))
                 fragmentTitles.put(this.getTag(), title);
-            
+
         }
     }
 

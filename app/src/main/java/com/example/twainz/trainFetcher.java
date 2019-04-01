@@ -24,7 +24,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class trainFetcher {
+public class TrainFetcher {
     private static Vector<String> stationList;
     static private Vector<train> trainList;
     static private Vector<station> stations;
@@ -32,7 +32,7 @@ public class trainFetcher {
     private Context context;
     static int stationQueryCode;
 
-    public trainFetcher(Context c){
+    public TrainFetcher(Context c){
         this.context = c;
 
         this.getStationList();
@@ -129,7 +129,6 @@ public class trainFetcher {
                         e.printStackTrace();
 
                     }
-                    Log.d("Debug", "Thread ran");
                 }
 
             });
@@ -296,6 +295,18 @@ public class trainFetcher {
         protected double longitude;
         protected int stationId;
     }
+
+    public class LinerunStation {
+        public String location;
+        public int[] arrival_time = new int[2];      //arrival_time[0] = hours, arrival_time[1] = mins
+        //having this as an int instead of a string reduces the amount on string-int conversions
+        public Integer delay;
+        public boolean visited ;  //set this boolean to true if we have passed by the station
+
+        public LinerunStation(){}
+
+    }
+
 
     public class train implements Comparable<train>{
         protected String arrivalTime;
