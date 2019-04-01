@@ -75,9 +75,13 @@ public class JourneyPlanner extends Fragment {
             // Clear cursor and focus from EditTexts
             textDest.clearFocus();
             textOrig.clearFocus();
-            if(listOfStations.contains(textDest.getText().toString()) && listOfStations.contains(textDest.getText().toString())) {
+            // Tell user if entered stations are invalid
+            if(!listOfStations.contains(textDest.getText().toString())){ textDest.startAnimation(shake); }
+            if(!listOfStations.contains(textOrig.getText().toString())){ textOrig.startAnimation(shake); }
+            // Update trains if stations are valid
+            if(listOfStations.contains(textDest.getText().toString()) && listOfStations.contains(textOrig.getText().toString())) {
                 // Start "enter" animation
-//                v.startAnimation(shake);
+                v.startAnimation(shake);
                 // Enter current stations into fragment and reload
                 fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, textOrig.getText().toString());
                 fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECEIVE, listOfStations.indexOf(textOrig.getText().toString()));
@@ -85,9 +89,6 @@ public class JourneyPlanner extends Fragment {
                 fragment.setArguments(fragmentData);
                 ((stationInformationActivity) fragment).onRefresh();
             }
-            // Check if stations entered are valid
-            if(!listOfStations.contains(textDest.getText().toString())){ textDest.startAnimation(shake); }
-            if(!listOfStations.contains(textOrig.getText().toString())){ textOrig.startAnimation(shake); }
         });
 
         // Button listener for switching direction
