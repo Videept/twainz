@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -99,6 +100,10 @@ public class JourneyPlanner extends Fragment {
             return true;
         });
 
+        // Hide keyboard when station is chosen from drop-down list
+        textOrig.setOnItemClickListener((parent, view, position1, id) -> hideSoftKeyboard(getActivity()));
+        textDest.setOnItemClickListener((parent, view, position1, id) -> hideSoftKeyboard(getActivity()));
+
         return journeyView;
     }
 
@@ -106,6 +111,7 @@ public class JourneyPlanner extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
     }
+
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
