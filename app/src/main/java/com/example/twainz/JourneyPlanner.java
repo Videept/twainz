@@ -110,6 +110,9 @@ public class JourneyPlanner extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser && isAdded()) {
+            ((MainActivity) getActivity()).setActionBarTitle("TWAINZ");
+        }
     }
 
     public static void hideSoftKeyboard(Activity activity) {
