@@ -48,6 +48,7 @@
     </LinearLayout>
 
 
+
     <AutoCompleteTextView
         android:id="@+id/editText_orig"
         android:layout_width="match_parent"
@@ -62,14 +63,22 @@
         android:textSize="36sp"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="Autofill"
-        tools:layout_editor_absoluteX="176dp" />
-  
-    <FrameLayout
-        android:id="@+id/fragFrame"
+        tools:layout_editor_absoluteX="176dp"
+        />
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/journeyDialog"
-        app:layout_constraintTop_toBottomOf="@id/editText_orig"
-        tools:layout_editor_absoluteX="8dp" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <FrameLayout
+            android:id="@+id/fragFrame"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/journeyDialog"
+            app:layout_constraintTop_toBottomOf="@id/editText_orig"
+            tools:layout_editor_absoluteX="8dp" />
+    </LinearLayout>
+  
+
 
 </android.support.constraint.ConstraintLayout>
