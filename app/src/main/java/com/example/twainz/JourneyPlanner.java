@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -55,6 +54,9 @@ public class JourneyPlanner extends Fragment {
         textDest.setAdapter(adapter);
         textOrig.setAdapter(adapter);
 
+        textOrig.setOnItemClickListener((parent, view, position1, id) -> hideSoftKeyboard(getActivity()));
+        textDest.setOnItemClickListener((parent, view, position1, id) -> hideSoftKeyboard(getActivity()));
+
         // Fragment stuff
         android.support.v4.app.FragmentManager childManager = getChildFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   // Begin the fragment change
@@ -74,10 +76,12 @@ public class JourneyPlanner extends Fragment {
         // Button listener for entering stations
         buttonDir.setOnClickListener((View v) -> {
             // Clear cursor and focus from EditTexts
+
             textDest.clearFocus();
             textOrig.clearFocus();
             // Start "enter" animation
             v.startAnimation(shake);
+
             // Enter current stations into fragment and reload
             fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, textOrig.getText().toString());
             fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECEIVE, listOfStations.indexOf(textOrig.getText().toString()));
@@ -100,10 +104,6 @@ public class JourneyPlanner extends Fragment {
             return true;
         });
 
-        // Hide keyboard when station is chosen from drop-down list
-        textOrig.setOnItemClickListener((parent, view, position1, id) -> hideSoftKeyboard(getActivity()));
-        textDest.setOnItemClickListener((parent, view, position1, id) -> hideSoftKeyboard(getActivity()));
-
         return journeyView;
     }
 
@@ -119,5 +119,6 @@ public class JourneyPlanner extends Fragment {
         inputMethodManager.hideSoftInputFromWindow(
                 activity.getCurrentFocus().getWindowToken(), 0);
     }
+
 
 }
