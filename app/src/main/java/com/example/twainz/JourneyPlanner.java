@@ -73,18 +73,21 @@ public class JourneyPlanner extends Fragment {
         // Button listener for entering stations
         buttonDir.setOnClickListener((View v) -> {
             // Clear cursor and focus from EditTexts
-
             textDest.clearFocus();
             textOrig.clearFocus();
-            // Start "enter" animation
-            v.startAnimation(shake);
-
-            // Enter current stations into fragment and reload
-            fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, textOrig.getText().toString());
-            fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECEIVE, listOfStations.indexOf(textOrig.getText().toString()));
-            fragmentData.putString(((stationInformationActivity) fragment).DEST_STATION, textDest.getText().toString());
-            fragment.setArguments(fragmentData);
-            ((stationInformationActivity) fragment).onRefresh();
+            if(listOfStations.contains(textDest.getText().toString()) && listOfStations.contains(textDest.getText().toString())) {
+                // Start "enter" animation
+//                v.startAnimation(shake);
+                // Enter current stations into fragment and reload
+                fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, textOrig.getText().toString());
+                fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECEIVE, listOfStations.indexOf(textOrig.getText().toString()));
+                fragmentData.putString(((stationInformationActivity) fragment).DEST_STATION, textDest.getText().toString());
+                fragment.setArguments(fragmentData);
+                ((stationInformationActivity) fragment).onRefresh();
+            }
+            // Check if stations entered are valid
+            if(!listOfStations.contains(textDest.getText().toString())){ textDest.startAnimation(shake); }
+            if(!listOfStations.contains(textOrig.getText().toString())){ textOrig.startAnimation(shake); }
         });
 
         // Button listener for switching direction
@@ -101,8 +104,20 @@ public class JourneyPlanner extends Fragment {
             return true;
         });
 
-        textOrig.setOnItemClickListener((parent, view, position1, id) -> hideSoftKeyboard(getActivity()));
-        textDest.setOnItemClickListener((parent, view, position1, id) -> hideSoftKeyboard(getActivity()));
+        textOrig.setOnItemClickListener((parent, view, position1, id) -> {
+            // Hide keyboard function
+            hideSoftKeyboard(getActivity());
+            // Clear cursor and focus from EditTexts
+            textDest.clearFocus();
+            textOrig.clearFocus();
+        });
+        textDest.setOnItemClickListener((parent, view, position1, id) -> {
+            // Hide keyboard function
+            hideSoftKeyboard(getActivity());
+            // Clear cursor and focus from EditTexts
+            textDest.clearFocus();
+            textOrig.clearFocus();
+        });
 
         return journeyView;
     }
