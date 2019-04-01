@@ -13,12 +13,14 @@ import android.widget.ImageButton;
 import java.util.Vector;
 import android.widget.TextView;
 
-public class JourneyPlanner extends Fragment {
+public class FragmentJourneyPlanner extends FragmentRoot {
     static private Vector<String> Message;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 //        return super.onCreateView(inflater, container, savedInstanceState);
+        setTitle("Journey Planner");
+        setUserVisibleHint(false);
 
         View journeyView = inflater.inflate(R.layout.journey_planner, container, false);
 

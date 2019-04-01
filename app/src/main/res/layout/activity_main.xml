@@ -9,8 +9,8 @@
     android:background="?android:windowBackground"
     tools:context=".MainActivity">
 
-    <!--<android.support.v4.view.ViewPager-->
-    <com.example.twainz.CustomViewPager
+    <android.support.v4.view.ViewPager
+
         android:id="@+id/container"
         android:layout_width="0dp"
         android:layout_height="0dp"

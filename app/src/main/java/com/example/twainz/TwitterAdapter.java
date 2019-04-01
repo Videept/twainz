@@ -9,12 +9,12 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class TwitterAdapter extends ArrayAdapter<TwitterPost> {
-    private List<TwitterPost> items;
+public class TwitterAdapter extends ArrayAdapter<FragmentTwitter.TwitterPost> {
+    private List<FragmentTwitter.TwitterPost> items;
     private Context context;
     private LayoutInflater mInflater;
 
-    TwitterAdapter(Context context, List<TwitterPost> posts){
+    TwitterAdapter(Context context, List<FragmentTwitter.TwitterPost> posts){
         super(context, 0, posts);
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
@@ -22,7 +22,7 @@ public class TwitterAdapter extends ArrayAdapter<TwitterPost> {
     }
 
     @Override
-    public TwitterPost getItem(int position) {
+    public FragmentTwitter.TwitterPost getItem(int position) {
         return items.get(position);
     }
 
@@ -33,7 +33,7 @@ public class TwitterAdapter extends ArrayAdapter<TwitterPost> {
             convertView = inflater.inflate(R.layout.twitter_post, null );
         }
 
-        TwitterPost twitterPost = getItem(position);
+        FragmentTwitter.TwitterPost twitterPost = getItem(position);
 
         ((TextView) convertView.findViewById(R.id.date)).setText(twitterPost.getDate());
         ((TextView) convertView.findViewById(R.id.hour)).setText(twitterPost.getHour());

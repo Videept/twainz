@@ -46,7 +46,7 @@ import static com.example.twainz.R.layout.location_fragment;
 /**
  * A fragment that launches other parts of the demo application.
  */
-public class MapsActivity extends Fragment implements
+public class FragmentMaps extends FragmentRoot implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
@@ -63,6 +63,8 @@ public class MapsActivity extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(location_fragment, container, false);
+        setTitle("Station Map");
+        setUserVisibleHint(false);
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
