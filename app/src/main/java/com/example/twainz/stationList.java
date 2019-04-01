@@ -1,5 +1,7 @@
 package com.example.twainz;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,7 +21,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
 
 public class stationList extends Fragment  {
     private ListView mListView;
@@ -27,6 +31,7 @@ public class stationList extends Fragment  {
     private static ArrayList<String> list;  //had to make this static to avoid having to make it final
                                                 //(it would otherwise have to be final inside the textwatcher)
 
+    private FavViewModel model;
 
     @Nullable
     @Override
@@ -36,13 +41,25 @@ public class stationList extends Fragment  {
         mListView = rootView.findViewById(R.id.listView);
         EditText searchbar = rootView.findViewById(R.id.search_text);
         final trainFetcher tf = new trainFetcher(getContext());
-
-        Favourites.favourites_alist =  Favourites.mDatabase.displayfavourites();
+        model =  ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(FavViewModel.class);
 
 
         list = new ArrayList<>(tf.getStationList());
+        StringAdapter adapter = new StringAdapter(rootView.getContext(), list, model);
 
-        final StringAdapter adapter = new StringAdapter(rootView.getContext(), list);
+
+        model.getFavourites().observe(this, new Observer<ArrayList<String>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<String> list) {
+                model.setArrayList(list);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+
+
+
+
 
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -125,10 +142,12 @@ public class stationList extends Fragment  {
 }
 //Custom adapter class to ensure new buttons are uniquely tagged so UI callbacks can be processed correctly
 class StringAdapter extends ArrayAdapter<String> {
-
-    public StringAdapter(Context context, ArrayList<String> parent_stations) {
+    private FavViewModel model;
+    private ArrayList<String> fav_stations;
+    public StringAdapter(Context context, ArrayList<String> parent_stations, FavViewModel _model) {
         super(context, 0, parent_stations);
-
+        model = _model;
+        fav_stations = model.getArrayList();
     }
 
     @Override
@@ -146,11 +165,13 @@ class StringAdapter extends ArrayAdapter<String> {
         t.setTag(position); //Tag the button with it's position in the list
 
         CheckBox cb = convertView.findViewById(R.id.checkBox2);
-        if(Favourites.favourites_alist.contains(station)) {
+
+        if(fav_stations.contains(station)) {
             cb.setChecked(true);
         }else{
             cb.setChecked(false);
         }
+
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,15 +183,17 @@ class StringAdapter extends ArrayAdapter<String> {
                     //update static favourites list for the next time its needed
                     // ( since it wont be null in the next time onCreate is called )
                     //remove item from listview and reload listview
-                    Favourites.favourites_alist.remove(station);
-                    //remove item from database
                     Favourites.mDatabase.deleteData(station);
+                    fav_stations.remove(station);
+                    //remove item from database
+                    model.setArrayList(fav_stations);
                 }else {
                     //add to datebase
                     //add item to database
                     Favourites.mDatabase.insertData(station);
                     ///update static favourites list for the next time onCreate is called
-                    Favourites.favourites_alist.add(station);
+                    fav_stations.add(station);
+                    model.setArrayList(fav_stations);
                 }
 
 

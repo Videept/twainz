@@ -1,5 +1,7 @@
 package com.example.twainz;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,7 +18,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseApiNotAvailableException;
+
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static android.graphics.Color.rgb;
 
@@ -24,10 +29,11 @@ public class Favourites extends Fragment {
 
     private View rootView;
     public static Database mDatabase;
-    public static ArrayList<String> favourites_alist;
+    //public static ArrayList<String> favourites_alist;
     //set true if the favourites list needs to be reloaded by another class
     // cant make this an array of ints since we need to reference the stations by station name
-
+    private FavViewModel model;
+    private ArrayList<String> favourites_alist;
 
     @Nullable
     @Override
@@ -37,20 +43,30 @@ public class Favourites extends Fragment {
         ListView mListView = rootView.findViewById(R.id.favourites_list);
         trainFetcher tf = new trainFetcher(rootView.getContext());
         //TODO: the list of all stations is just initialised for testing purposes
-        //String test = tf.getStationList().get(0);
-
-        //mDatabase.deleteData(test);
-        //mDatabase.insertData(test);
+        String test1 = tf.getStationList().get(0);
+        String test2 = tf.getStationList().get(1);
+        mDatabase.deleteData(test1);
+        mDatabase.insertData(test1);
+        mDatabase.deleteData(test2);
+        mDatabase.insertData(test2);
         favourites_alist = mDatabase.displayfavourites();
 
-        ///we dont need to change the adapter here since we need to use tha custom adapter from the favouritesListAdapter class as below
-        //ArrayAdapter arrayAdapter=new ArrayAdapter(rootView.getContext(),android.R.layout.simple_list_item_1,array_list);
-        //mListView.setAdapter(arrayAdapter);
-        //ArrayList<String> list = /* new ArrayList<>(tf.getStationList());*/mDatabase.getFavouritesList();
+        model = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(FavViewModel.class);
+        model.setArrayList(favourites_alist);
 
-        final com.example.twainz.favouritesListAdapter adapter = new com.example.twainz.favouritesListAdapter(rootView.getContext(), favourites_alist);
 
+        com.example.twainz.favouritesListAdapter adapter = new com.example.twainz.favouritesListAdapter(rootView.getContext(), favourites_alist, model);
         mListView.setAdapter(adapter);
+
+
+        model.getFavourites().observe(this, new Observer<ArrayList<String>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<String> list) {
+                favourites_alist = list;
+                adapter.notifyDataSetChanged();
+            }
+        });
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -92,10 +108,12 @@ public class Favourites extends Fragment {
 class favouritesListAdapter extends ArrayAdapter<String> {
 
     private ArrayList<String> fav_stations;
+    private FavViewModel model;
 
-    public favouritesListAdapter(Context context, ArrayList<String> parent_favourite_stations) {
+    public favouritesListAdapter(Context context, ArrayList<String> parent_favourite_stations, FavViewModel _model) {
         super(context, 0, parent_favourite_stations);
         fav_stations = parent_favourite_stations;
+        model = _model;
     }
 
     @Override
@@ -115,18 +133,20 @@ class favouritesListAdapter extends ArrayAdapter<String> {
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//uncheck box
-                cb.setChecked(false);
-                //update static favourites list for the next time its needed
+                // update static favourites list for the next time its needed
                 // ( since it wont be null in the next time onCreate is called )
 
                 //remove item from listview and reload listview
+                //this works when favourites_alist and mDatabase are public static
+                Favourites.mDatabase.deleteData(station);
+                fav_stations.remove(station);
+                model.setArrayList(fav_stations);
+                /*
                 Favourites.favourites_alist.remove(station);
-                favouritesListAdapter.super.clear();
-                favouritesListAdapter.super.addAll(Favourites.favourites_alist);
                 favouritesListAdapter.super.notifyDataSetChanged();
                 //remove item from database
-                Favourites.mDatabase.deleteData(station);
 
+                */
             }
         });
         return convertView;
