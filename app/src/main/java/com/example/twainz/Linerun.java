@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,8 +44,7 @@ public class Linerun extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser && isAdded()) {
-            ((MainActivity)getActivity()).setActionBarTitle("Line run test string");
-            Log.d("D", "Line run called");
+            ((MainActivity)getActivity()).setActionBarTitle("Line Run");
         }
     }
 

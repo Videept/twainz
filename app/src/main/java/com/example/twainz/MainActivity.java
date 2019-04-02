@@ -19,7 +19,15 @@ import com.google.android.gms.maps.MapView;
 public class MainActivity extends AppCompatActivity{
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
+//    private ViewPager mViewPager;
+    private CustomViewPager mViewPager;
+
+    final int[] ICONS = new int[]{
+            R.drawable.journey,
+            R.drawable.station,
+            R.drawable.favourite,
+            R.drawable.twitter,
+            R.drawable.nearme};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +46,12 @@ public class MainActivity extends AppCompatActivity{
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
-
+        tabLayout.getTabAt(0).setIcon(ICONS[0]);
+        tabLayout.getTabAt(1).setIcon(ICONS[1]);
+        tabLayout.getTabAt(2).setIcon(ICONS[2]);
+        tabLayout.getTabAt(3).setIcon(ICONS[3]);
+        tabLayout.getTabAt(4).setIcon(ICONS[4]);
+        mViewPager.setCurrentItem(2);
     }
 
     @Override
@@ -54,13 +67,9 @@ public class MainActivity extends AppCompatActivity{
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-
         if (id == R.id.action_settings) {
-            Log.d("d_tag", String.valueOf(findViewById(R.id.container).getMeasuredHeight()/getResources().getDisplayMetrics().density));
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -129,10 +138,14 @@ public class MainActivity extends AppCompatActivity{
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    return new stationList();
+                    return new JourneyPlanner();
                 case 1:
-                    return new Twitter();
+                    return new stationList();
                 case 2:
+                    return new Favourites();
+                case 3:
+                    return new Twitter();
+                case 4:
                     return new MapsActivity();
                 default:
                     return null;
@@ -142,18 +155,23 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public int getCount() {
             // Show 2 total pages.
-            return 3;
+            return 5;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
+                //removed the names from these buttons since the icons should be descriptive enough
                 case 0:
-                    return "Stations";
+                    return "";//"Journey";
                 case 1:
-                    return "Twitter";
+                    return "";//"Stations";
                 case 2:
-                    return "Near Me";
+                    return "";//"Favourites";
+                case 3:
+                    return "";//"Twitter";
+                case 4:
+                    return "";//"Near Me";
                 default:
                     return null;
             }

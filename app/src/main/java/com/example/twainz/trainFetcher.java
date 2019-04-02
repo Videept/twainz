@@ -3,6 +3,7 @@ package com.example.twainz;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.icu.text.SimpleDateFormat;
+import android.media.MediaPlayer;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
@@ -15,6 +16,8 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
@@ -216,7 +219,7 @@ public class trainFetcher {
                                 t.arrivalTime = ((Element) current).getElementsByTagName("Schdepart").item(0).getTextContent().equals("00:00") ?
                                         ((Element) current).getElementsByTagName("Scharrival").item(0).getTextContent() :
                                         ((Element) current).getElementsByTagName("Schdepart").item(0).getTextContent();
-
+                                t.dueTime = Byte.valueOf(((Element) current).getElementsByTagName("Duein").item(0).getTextContent());
                                 t.delay = Integer.valueOf(((Element) current).getElementsByTagName("Late").item(0).getTextContent());
                                 t.destination = ((Element) current).getElementsByTagName("Destination").item(0).getTextContent();
                                 t.type = ((Element) current).getElementsByTagName("Traintype").item(0).getTextContent();
@@ -239,6 +242,8 @@ public class trainFetcher {
                 e.printStackTrace();
             }
 
+            Collections.sort(trainList);
+
             return trainList;
 
         }
@@ -248,6 +253,7 @@ public class trainFetcher {
     }
 
     public Vector<station> readStationFromXML(){
+
         InputStream stationFile = context.getResources().openRawResource(context.getResources().getIdentifier("station_list",
                         "raw", context.getPackageName()));
         Vector<station> sList = new Vector<>();
@@ -307,13 +313,14 @@ public class trainFetcher {
         }
     }
 
-    class train{
+    public class train implements Comparable<train>{
         protected String arrivalTime;
         protected int delay;
         protected String destination;
         protected String type;
         protected String id;
         protected String date;
+        protected byte dueTime;
 
         public String getArrivalTime(){
             return arrivalTime;
@@ -329,6 +336,28 @@ public class trainFetcher {
         }
         public String getId(){ return id; }
         public String getDate(){ return date; }
+        public byte getDueTime(){ return dueTime; }
+
+        @Override
+        public int compareTo(train o) {
+
+            String total = "";
+            String total_i = "";
+            char[] charray = o.arrivalTime.toCharArray();
+            if(charray[0]  == '0' && charray[1] == '0') {
+                charray[0] = '2';
+                charray[1] = '5';
+                }
+            total += charray[0] + charray[1] + charray[3] + charray[4];
+            char[] charray_i = arrivalTime.toCharArray();
+            if(charray_i[0]  == '0' && charray[1] == '0') {
+                charray_i[0] = '2';
+                charray_i[1] = '5';
+            }
+            total_i += charray_i[0] + charray_i[1] + charray_i[3] + charray_i[4];
+
+            return total_i.compareTo(total);
+        }
     }
 
 
