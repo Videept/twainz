@@ -55,6 +55,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_weight="0"
                 android:button="@drawable/star_box"
+                android:checked="true"
                 app:layout_constraintBaseline_toBaselineOf="@+id/stationButton"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

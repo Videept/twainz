@@ -1,15 +1,13 @@
 package com.example.twainz;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.databinding.Observable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,10 +45,15 @@ public class stationList extends Fragment  {
         list = new ArrayList<>(tf.getStationList());
         StringAdapter adapter = new StringAdapter(rootView.getContext(), list, model);
 
+        Observable.OnPropertyChangedCallback onPropertyChangedCallback = new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                StringAdapter adapter = new StringAdapter(rootView.getContext(), list, model);
+                mListView.setAdapter(adapter);
+            }
+        };
 
-
-
-
+        model.reload_needed.addOnPropertyChangedCallback(onPropertyChangedCallback);
 
 
         mListView.setAdapter(adapter);
@@ -156,39 +159,24 @@ class StringAdapter extends ArrayAdapter<String> {
         t.setText(station);
         t.setTag(position); //Tag the button with it's position in the list
 
-        CheckBox cb = convertView.findViewById(R.id.checkBox2);
+        final CheckBox cb = convertView.findViewById(R.id.checkBox2);
 
-        if(fav_stations.contains(station)) {
-            cb.setChecked(true);
-        }else{
-            cb.setChecked(false);
-        }
+        cb.setChecked(fav_stations.contains(station));
 
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //check box
-                //Log.d("d_tag", " intial state is " + String.valueOf(cb.isChecked()));
                 if(!cb.isChecked()){
                     //remove from database
-                    //update static favourites list for the next time its needed
-                    // ( since it wont be null in the next time onCreate is called )
-                    //remove item from listview and reload listview
                     Favourites.mDatabase.deleteData(station);
                     fav_stations.remove(station);
-                    //remove item from database
-                    model.setFavourites(fav_stations);
+
                 }else {
                     //add to datebase
-                    //add item to database
                     Favourites.mDatabase.insertData(station);
-                    ///update static favourites list for the next time onCreate is called
                     fav_stations.add(station);
-                    model.setFavourites(fav_stations);
-                }
-
-
+                }//set favourites
+                model.setFavourites(fav_stations);
             }
         });
         return convertView;

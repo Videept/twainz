@@ -3,21 +3,19 @@ package com.example.twainz;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.content.Context;
-import android.database.Observable;
-
+import android.databinding.ObservableBoolean;
 import java.util.ArrayList;
 
 
-public class FavViewModel extends ViewModel {
-//    public boolean update_favourites_frag;  //bool set to true if need to update favourites or stationlist;
-//    public boolean update_stationlist_frag;
 
+public class FavViewModel extends ViewModel{
 
     private MutableLiveData<ArrayList<String>> favourites;
     private ArrayList<String> fav_alist;
 
-    //public Observable<Boolean> needs_reload;
+    // bool for if if the stationlist needs to be reloaded
+    public final ObservableBoolean reload_needed = new ObservableBoolean();
+
 
     public LiveData<ArrayList<String>> getFavourites() {
         if (favourites == null) {

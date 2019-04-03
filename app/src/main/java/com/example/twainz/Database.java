@@ -31,12 +31,12 @@ public ArrayList<String> displayfavourites(){
         ArrayList<String> array_list = new ArrayList<String>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "+ table_name,null);
+        Cursor cursor = db.rawQuery("SELECT "+column2+" FROM "+ table_name,null);
         try {
             if (cursor != null) {
                 cursor.moveToFirst();
                 do {
-                    array_list.add(cursor.getString(1));
+                    array_list.add(cursor.getString(0));
                 } while (cursor.moveToNext());
             }
         }catch (Exception e){
