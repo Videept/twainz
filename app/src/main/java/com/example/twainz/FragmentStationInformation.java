@@ -31,8 +31,7 @@ public class FragmentStationInformation extends FragmentRoot implements SwipeRef
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.station_view_fragment, container, false);
-
+        rootView = inflater.inflate(R.layout.fragment_station_information, container, false);
 
         //Initialise the TrainFetcher. Object should already contain the string of the specified station
         tf = new TrainFetcher(getContext());
@@ -40,9 +39,6 @@ public class FragmentStationInformation extends FragmentRoot implements SwipeRef
         //Using the TrainFetcher to retrieve the data for the station
         Bundle args = getArguments();
         tf.retrieveTrainsAtStation(args.getString(DATA_RECEIVE),args.getInt(INDEX_RECIEVE) );
-
-        setTitle(args.getString(DATA_RECEIVE));
-        updateTitle();
 
         //Get the current time
         Calendar calender = Calendar.getInstance();
@@ -66,18 +62,13 @@ public class FragmentStationInformation extends FragmentRoot implements SwipeRef
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                android.support.v4.app.FragmentManager childManager = getChildFragmentManager();
-                android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   //Begin the fragment change
                 Fragment fragment = new FragmentLinerun();   //Initialise the new fragment
-                fragment.setUserVisibleHint(true);
 
                 Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
                 fragmentData.putString(((FragmentLinerun) fragment).DATA_RECEIVE, String.valueOf(position));
-                fragment.setArguments(fragmentData);
 
-                fragmentTransaction.replace(R.id.constraintLayout2, fragment,"StationInformation:LineRun");   //Replace listConstraintLayout with the new fragment
-                fragmentTransaction.addToBackStack("StationInformation:LineRun");   //Add the previous fragment to the stack so the back button works
-                fragmentTransaction.commit();   //Complete the fragment transaction
+                launchFragment(fragment, "Line run", R.id.constraintLayout2, fragmentData);
+
             }
         });
 
@@ -119,7 +110,7 @@ class trainAdapter extends ArrayAdapter<TrainFetcher.train> {
         TrainFetcher.train t = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.station_information_row, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_station_information_row, parent, false);
         }
 
         TextView tempView = convertView.findViewById(R.id.trainTypeView);

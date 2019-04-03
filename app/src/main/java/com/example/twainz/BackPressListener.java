@@ -32,10 +32,6 @@ public interface BackPressListener {
 
 
                 if (!childFragment.onBackPressed()) {  //If the backpress wasnt handled by the child fragment handle it here
-
-
-                    FragmentRoot child = (FragmentRoot)childFragmentManager.getFragments().get(childCount - 1).getParentFragment();
-                    child.updateTitle();
                     childFragmentManager.popBackStack();
 
                 }

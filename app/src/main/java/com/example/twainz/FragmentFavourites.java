@@ -29,9 +29,7 @@ public class FragmentFavourites extends FragmentRoot {
     @Nullable
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.favourites_list, container, false);
-        setTitle(getResources().getString(R.string.fav_appbar));
-        setUserVisibleHint(false);
+        rootView = inflater.inflate(R.layout.fragment_favourites_list, container, false);
 
         mDatabase = new Database(rootView.getContext()); //object of Database class
         ListView mListView = rootView.findViewById(R.id.favourites_list);
@@ -96,7 +94,7 @@ class favouritesListAdapter extends ArrayAdapter<String> {
         String station = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.favourites_view, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_favourite_row, parent, false);
         }
 
         TextView t = convertView.findViewById(R.id.stationButton);

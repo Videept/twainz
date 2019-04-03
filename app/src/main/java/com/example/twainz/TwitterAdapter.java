@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -36,17 +36,17 @@ public class TwitterAdapter extends ArrayAdapter<FragmentTwitter.TwitterPost> {
         FragmentTwitter.TwitterPost twitterPost = getItem(position);
 
         if (convertView == null && twitterPost.getImageUrl()==null) {
-            convertView = inflater.inflate(R.layout.twitter_post, null );
+            convertView = inflater.inflate(R.layout.adapter_twitter_post, null );
         }else if(convertView == null){
-            convertView = inflater.inflate(R.layout.twitter_post_image, null );
-            Picasso.get().load(twitterPost.getImageUrl()).into((ImageView) convertView.findViewById(R.id.twitterImage));
+            convertView = inflater.inflate(R.layout.adapter_twitter_post_image, null );
+            //Picasso.get().load(twitterPost.getImageUrl()).into((ImageView) convertView.findViewById(R.id.twitterImage));
         }
 
         if (convertView != null && twitterPost.getImageUrl()==null) {
-            convertView = inflater.inflate(R.layout.twitter_post, null );
+            convertView = inflater.inflate(R.layout.adapter_twitter_post, null );
         }else if(convertView != null){
-            convertView = inflater.inflate(R.layout.twitter_post_image, null );
-            Picasso.get().load(twitterPost.getImageUrl()).into((ImageView) convertView.findViewById(R.id.twitterImage));
+            convertView = inflater.inflate(R.layout.adapter_twitter_post_image, null );
+            //Picasso.get().load(twitterPost.getImageUrl()).into((ImageView) convertView.findViewById(R.id.twitterImage));
         }
 
         ((TextView) convertView.findViewById(R.id.date)).setText(twitterPost.getDate());

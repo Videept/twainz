@@ -26,14 +26,11 @@ public class FragmentStationList extends FragmentRoot {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.activity_list, container, false);
-        //setUserVisibleHint(false);
+        rootView = inflater.inflate(R.layout.fragment_station_list, container, false);
 
         mListView = rootView.findViewById(R.id.listView);
         EditText searchbar = rootView.findViewById(R.id.search_text);
         final TrainFetcher tf = new TrainFetcher(getContext());
-
-        setTitle("Stations");
 
         list = new ArrayList<>(tf.getStationList());
 
@@ -45,11 +42,7 @@ public class FragmentStationList extends FragmentRoot {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String search = list.get(position);
 
-                android.support.v4.app.FragmentManager childManager = getChildFragmentManager();
-                android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   //Begin the fragment change
                 Fragment fragment = new FragmentStationInformation();   //Initialise the new fragment
-                fragment.setUserVisibleHint(true);
-
 
                 Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
                 fragmentData.putString(((FragmentStationInformation) fragment).DATA_RECEIVE, search);
@@ -57,11 +50,8 @@ public class FragmentStationList extends FragmentRoot {
                     position = tf.getStationList().indexOf(list.get(position));
                 }
                 fragmentData.putInt(((FragmentStationInformation) fragment).INDEX_RECIEVE, position);
-                fragment.setArguments(fragmentData);
 
-                fragmentTransaction.replace(R.id.listConstraintLayout, fragment, "StationList:StationInformation" + String.valueOf(position));   //Replace listConstraintLayout with the new fragment
-                fragmentTransaction.addToBackStack("StationList:StationInformation" + String.valueOf(position));   //Add the previous fragment to the stack so the back button works
-                fragmentTransaction.commit();   //Complete the fragment transaction
+                launchFragment(fragment, search, R.id.listConstraintLayout, fragmentData);
             }
         });
 
@@ -125,7 +115,7 @@ class StringAdapter extends ArrayAdapter<String> {
         String station = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_view, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_station_list_row, parent, false);
         }
 
         TextView t = convertView.findViewById(R.id.stationButton);

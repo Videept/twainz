@@ -1,22 +1,14 @@
 package com.example.twainz;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +32,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import static android.support.constraint.Constraints.TAG;
-import static com.example.twainz.R.layout.location_fragment;
+import static com.example.twainz.R.layout.fragment_maps;
 
 /**
  * A fragment that launches other parts of the demo application.
@@ -62,9 +53,7 @@ public class FragmentMaps extends FragmentRoot implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(location_fragment, container, false);
-        setTitle("Station Map");
-        setUserVisibleHint(false);
+        View rootView = inflater.inflate(fragment_maps, container, false);
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);

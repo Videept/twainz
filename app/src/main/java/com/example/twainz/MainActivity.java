@@ -8,17 +8,21 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
+import java.util.Stack;
+
 
 public class MainActivity extends AppCompatActivity{
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
-//    private ViewPager mViewPager;
     private ViewPager mViewPager;
+    public static Stack<String>[] appTitles;
+    public int currentPage;
 
 
     final int[] ICONS = new int[]{
@@ -32,6 +36,17 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        appTitles = new Stack[5]; //Initialise the title stacks
+
+        for (int i = 0; i < 5; i++)
+            appTitles[i] = new Stack();
+
+        //Add the titles to the stacks
+        appTitles[0].push("Journey Planner");
+        appTitles[1].push("Stations");
+        appTitles[2].push("Favourites");
+        appTitles[3].push("Twitter");
+        appTitles[4].push("Map");
 
         // Create the adapter that will return a fragment for each of the two
         // primary sections of the activity.
@@ -50,6 +65,26 @@ public class MainActivity extends AppCompatActivity{
         tabLayout.getTabAt(2).setIcon(ICONS[2]);
         tabLayout.getTabAt(3).setIcon(ICONS[3]);
         tabLayout.getTabAt(4).setIcon(ICONS[4]);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+                ActionBar actionBar = getsupportactionbar();
+                currentPage = i;
+
+                if (actionBar != null)
+                    actionBar.setTitle(appTitles[i].peek());
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+            }
+        });
+
         mViewPager.setCurrentItem(2);
     }
 
@@ -76,6 +111,10 @@ public class MainActivity extends AppCompatActivity{
         ActionBar mActionBar = getSupportActionBar();
         return mActionBar;
     }
+    public void setTitle(String title){
+        ActionBar mActionBar = getSupportActionBar();
+        mActionBar.setTitle(title);
+    }
 
 
     @Override
@@ -84,7 +123,13 @@ public class MainActivity extends AppCompatActivity{
         BackPressListener currentFragment = (BackPressListener) mSectionsPagerAdapter.getRegisteredFragment(mViewPager.getCurrentItem());
 
         if (currentFragment != null) {
-           currentFragment.onBackPressed();
+            currentFragment.onBackPressed();
+
+            if (appTitles[currentPage].size() > 1)
+               appTitles[currentPage].pop();
+
+            setTitle(appTitles[currentPage].peek());
+
         }
 
     }
@@ -120,25 +165,7 @@ public class MainActivity extends AppCompatActivity{
                     return null;
             }
         }
-     /*   @Override
-        public CharSequence getPageTitle(int position) {
-            ActionBar actionBar = getsupportactionbar();
 
-            switch (position) {
-                //removed the names from these buttons since the icons should be descriptive enough
-                case 0:
-                    actionBar.setTitle("j");
-                case 1:
-                    actionBar.setTitle("S");
-                case 2:
-                    actionBar.setTitle("F");
-                case 3:
-                    actionBar.setTitle("T");
-                case 4:
-                    actionBar.setTitle("M");
-            }
-            return null;
-        }*/
         @Override
         public int getCount() {
             // Show 2 total pages.

@@ -22,13 +22,10 @@ public class FragmentLinerun extends FragmentRoot {
     @Nullable
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.activity_linerun, container, false);
-        setTitle("Line Run");
-        updateTitle();
+        rootView = inflater.inflate(R.layout.fragment_linerun, container, false);
 
         TrainFetcher tf = new TrainFetcher(getContext());
 
-        setUserVisibleHint(false);
 
         Bundle args = getArguments();
         TrainFetcher.train t = tf.getTrains().get(Integer.valueOf(args.getString(DATA_RECEIVE)));
@@ -89,7 +86,7 @@ class LinerunAdapter extends ArrayAdapter<TrainFetcher.LinerunStation> {
 
          */
 
-        convertView = LayoutInflater.from(getContext()).inflate(R.layout.linerun_row, parent, false);
+        convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_linerun_row, parent, false);
 
         TextView tv = convertView.findViewById(R.id.station_name);
         tv.setText(s.location);

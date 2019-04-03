@@ -3,7 +3,6 @@ package com.example.twainz;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +18,8 @@ public class FragmentJourneyPlanner extends FragmentRoot {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 //        return super.onCreateView(inflater, container, savedInstanceState);
-        setTitle("Journey Planner");
-        setUserVisibleHint(false);
 
-        View journeyView = inflater.inflate(R.layout.journey_planner, container, false);
+        View journeyView = inflater.inflate(R.layout.fragment_journey_planner, container, false);
 
         TextView textDest = journeyView.findViewById(R.id.textView_dest);
         TextView textOrig = journeyView.findViewById(R.id.textView_orig);
