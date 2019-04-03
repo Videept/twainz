@@ -3,6 +3,7 @@ package com.example.twainz;
 import java.util.ArrayList;
 import java.util.List;
 
+import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -42,6 +43,11 @@ public class FragmentTwitter extends FragmentRoot {
                 String[] TimeParts = DateParts[3].split(":");
                 //combinedTweets = combinedTweets + TimeParts[0] + ":" + TimeParts[1] + " " + DateParts[0] + " " + DateParts[2]+ "\n\n" +s.getText()+ "\n\n"+"------------------------------------------------------------------------------" + "\n\n";
                 TwitterPost twitterPost = new TwitterPost(TimeParts[0] + ":" + TimeParts[1], DateParts[0] + " " + DateParts[2], s.getText());
+                for(MediaEntity m : s.getMediaEntities()){
+                    if(m.getType().equals("photo")){
+                        twitterPost.setImageUrl(m.getMediaURL());
+                    }
+                }
                 posts.add(twitterPost);
             }
         }
@@ -57,12 +63,20 @@ public class FragmentTwitter extends FragmentRoot {
         private String date;
         private String hour;
         private String content;
+        private String imageUrl;
 
         TwitterPost(String hour, String date, String content){
             this.hour = hour;
             this.date = date;
             this.content = content;
+            this.imageUrl = null;
         }
+
+        public void setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+        }
+
+        String getImageUrl(){ return imageUrl; }
 
         String getDate(){
             return date;
