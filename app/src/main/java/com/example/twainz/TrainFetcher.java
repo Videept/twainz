@@ -3,7 +3,6 @@ package com.example.twainz;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.icu.text.SimpleDateFormat;
-import android.media.MediaPlayer;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
@@ -16,7 +15,6 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Vector;
@@ -251,6 +249,29 @@ public class TrainFetcher {
         return null;
     }
 
+    // Filters out trains at current station that don't stop at another specified station
+    void filterByDestination(String origin, String destination){
+        // Empty vector for storing trains to be filtered out (removed)
+        Vector<train> deleteTrains = new Vector<>();
+        // For each train at current station
+        for (train tr : trainList) {
+            // Empty vector for storing all stations on route
+            Vector<LinerunStation> tempStations = new Vector<>();
+            // Populate vector with stations
+            getLineRun(tempStations, tr.id, tr.date, origin);
+            // Ensure iteration direction is against train direction
+            if(!tempStations.get(0).location.equals(tr.destination)){ Collections.reverse(tempStations); }
+            // Check each station on route
+            for (LinerunStation st : tempStations){
+                // If destination is after (or at) origin station
+                if(destination.equals(st.location)){ break; }
+                // If destination is behind origin station
+                if(origin.equals(st.location)){ deleteTrains.add(tr); break; }
+            }
+        }
+        // Remove filtered trains
+        trainList.removeAll(deleteTrains);
+    }
 
     private Vector<station> readStationFromXML(){
         InputStream stationFile = context.getResources().openRawResource(context.getResources().getIdentifier("station_list",

@@ -8,4 +8,5 @@
     <string name="title_activity_maps">Map</string>
     <string name="favourites">Favourite stations</string>
     <string name="fav_appbar">Favourites</string>
+    <string name="swap_directions_button">Swap journey direction</string>
 </resources>
