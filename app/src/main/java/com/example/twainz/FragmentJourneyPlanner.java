@@ -15,24 +15,16 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.ImageButton;
-
-import java.util.List;
-import java.util.Vector;
-
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
 import java.util.ArrayList;
 
-public class JourneyPlanner extends Fragment {
+public class FragmentJourneyPlanner extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View journeyView = inflater.inflate(R.layout.journey_planner, container, false);
+        View journeyView = inflater.inflate(R.layout.fragment_journey_planner, container, false);
 
         // Layout view objects
         AutoCompleteTextView textDest = journeyView.findViewById(R.id.editText_dest);
@@ -45,7 +37,7 @@ public class JourneyPlanner extends Fragment {
 
         // Populate array with all stations and get position of origin station
         ArrayList<String> listOfStations;
-        final trainFetcher tf = new trainFetcher(getContext());
+        final TrainFetcher tf = new TrainFetcher(getContext());
         listOfStations = new ArrayList<>(tf.getStationList());
         int position = listOfStations.indexOf(textOrig.getText().toString());
 
@@ -57,13 +49,13 @@ public class JourneyPlanner extends Fragment {
         // Fragment stuff
         android.support.v4.app.FragmentManager childManager = getChildFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   // Begin the fragment change
-        Fragment fragment = new stationInformationActivity();                                               // Initialise the new fragment
+        Fragment fragment = new FragmentStationInformation();                                               // Initialise the new fragment
 
         Bundle fragmentData = new Bundle();                     // Bundle passes position of selected train to Line-run fragment
-        fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, textOrig.getText().toString());
-        fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECEIVE, position);
-        fragmentData.putString(((stationInformationActivity) fragment).IS_JOURNEY_PLANNER, "true");
-        fragmentData.putString(((stationInformationActivity) fragment).DEST_STATION, textDest.getText().toString());
+        fragmentData.putString(((FragmentStationInformation) fragment).DATA_RECEIVE, textOrig.getText().toString());
+        fragmentData.putInt(((FragmentStationInformation) fragment).INDEX_RECEIVE, position);
+        fragmentData.putString(((FragmentStationInformation) fragment).IS_JOURNEY_PLANNER, "true");
+        fragmentData.putString(((FragmentStationInformation) fragment).DEST_STATION, textDest.getText().toString());
         fragment.setArguments(fragmentData);
 
         fragmentTransaction.replace(R.id.fragFrame, fragment);  // Replace frame layout with the new fragment
@@ -83,11 +75,11 @@ public class JourneyPlanner extends Fragment {
                 // Start "enter" animation
                 v.startAnimation(shake);
                 // Enter current stations into fragment and reload
-                fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, textOrig.getText().toString());
-                fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECEIVE, listOfStations.indexOf(textOrig.getText().toString()));
-                fragmentData.putString(((stationInformationActivity) fragment).DEST_STATION, textDest.getText().toString());
+                fragmentData.putString(((FragmentStationInformation) fragment).DATA_RECEIVE, textOrig.getText().toString());
+                fragmentData.putInt(((FragmentStationInformation) fragment).INDEX_RECEIVE, listOfStations.indexOf(textOrig.getText().toString()));
+                fragmentData.putString(((FragmentStationInformation) fragment).DEST_STATION, textDest.getText().toString());
                 fragment.setArguments(fragmentData);
-                ((stationInformationActivity) fragment).onRefresh();
+                ((FragmentStationInformation) fragment).onRefresh();
             }
         });
 
@@ -123,13 +115,7 @@ public class JourneyPlanner extends Fragment {
         return journeyView;
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser && isAdded()) {
-            ((MainActivity) getActivity()).setActionBarTitle("TWAINZ");
-        }
-    }
+
 
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =

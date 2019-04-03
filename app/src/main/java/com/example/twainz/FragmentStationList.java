@@ -49,9 +49,9 @@ public class FragmentStationList extends FragmentRoot {
                 if(!searchbar.getText().toString().equals("")) {
                     position = tf.getStationList().indexOf(list.get(position));
                 }
-                fragmentData.putInt(((FragmentStationInformation) fragment).INDEX_RECIEVE, position);
+                fragmentData.putInt(((FragmentStationInformation)fragment).INDEX_RECEIVE, position);
                 fragmentData.putString(((FragmentStationInformation) fragment).IS_JOURNEY_PLANNER, "false");
-                Log.i("TESTING", "onCreateView: stationList");
+
                 fragment.setArguments(fragmentData);
 
                 launchFragment(fragment, search, R.id.listConstraintLayout, fragmentData);

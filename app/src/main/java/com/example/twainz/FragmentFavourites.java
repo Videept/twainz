@@ -62,7 +62,7 @@ public class FragmentFavourites extends FragmentRoot {
                 fragmentData.putString(((FragmentStationInformation) fragment).DATA_RECEIVE, favourites_alist.get(position));
                 fragment.setArguments(fragmentData);
                 position = tf.getStationList().indexOf(favourites_alist.get(position)); //need to get new position since favourites are out of order
-                fragmentData.putInt(((FragmentStationInformation) fragment).INDEX_RECIEVE, position);
+                fragmentData.putInt(((FragmentStationInformation) fragment).INDEX_RECEIVE, position);
                 fragment.setArguments(fragmentData);
 
                 fragmentTransaction.replace(R.id.favourites_listConstraint, fragment);   //Replace favourites_listconstraint with the new fragment
