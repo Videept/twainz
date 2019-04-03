@@ -3,7 +3,6 @@ package com.example.twainz;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.icu.text.SimpleDateFormat;
-import android.media.MediaPlayer;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
@@ -16,7 +15,6 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Vector;
@@ -24,7 +22,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class trainFetcher {
+public class TrainFetcher {
     private static Vector<String> stationList;
     static private Vector<train> trainList;
     static private Vector<station> stations;
@@ -32,7 +30,7 @@ public class trainFetcher {
     private Context context;
     static int stationQueryCode;
 
-    public trainFetcher(Context c){
+    public TrainFetcher(Context c){
         this.context = c;
 
         this.getStationList();
@@ -129,7 +127,6 @@ public class trainFetcher {
                         e.printStackTrace();
 
                     }
-                    Log.d("Debug", "Thread ran");
                 }
 
             });
@@ -252,6 +249,29 @@ public class trainFetcher {
         return null;
     }
 
+    // Filters out trains at current station that don't stop at another specified station
+    void filterByDestination(String origin, String destination){
+        // Empty vector for storing trains to be filtered out (removed)
+        Vector<train> deleteTrains = new Vector<>();
+        // For each train at current station
+        for (train tr : trainList) {
+            // Empty vector for storing all stations on route
+            Vector<LinerunStation> tempStations = new Vector<>();
+            // Populate vector with stations
+            getLineRun(tempStations, tr.id, tr.date, origin);
+            // Ensure iteration direction is against train direction
+            if(!tempStations.get(0).location.equals(tr.destination)){ Collections.reverse(tempStations); }
+            // Check each station on route
+            for (LinerunStation st : tempStations){
+                // If destination is after (or at) origin station
+                if(destination.equals(st.location)){ break; }
+                // If destination is behind origin station
+                if(origin.equals(st.location)){ deleteTrains.add(tr); break; }
+            }
+        }
+        // Remove filtered trains
+        trainList.removeAll(deleteTrains);
+    }
     public Vector<station> readStationFromXML(){
 
         InputStream stationFile = context.getResources().openRawResource(context.getResources().getIdentifier("station_list",
@@ -312,6 +332,18 @@ public class trainFetcher {
             return stationId;
         }
     }
+
+    public class LinerunStation {
+        public String location;
+        public int[] arrival_time = new int[2];      //arrival_time[0] = hours, arrival_time[1] = mins
+        //having this as an int instead of a string reduces the amount on string-int conversions
+        public Integer delay;
+        public boolean visited ;  //set this boolean to true if we have passed by the station
+
+        public LinerunStation(){}
+
+    }
+
 
     public class train implements Comparable<train>{
         protected String arrivalTime;

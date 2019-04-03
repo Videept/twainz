@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.twainz.trainFetcher.station;
+import com.example.twainz.TrainFetcher.station;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -36,12 +36,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
-import static com.example.twainz.R.layout.location_fragment;
+
+import static com.example.twainz.R.layout.fragment_maps;
 
 /**
  * A fragment that launches other parts of the demo application.
  */
-public class MapsActivity extends Fragment implements
+public class FragmentMaps extends FragmentRoot implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
@@ -54,15 +55,15 @@ public class MapsActivity extends Fragment implements
     private Marker currentUserLocationMarker;
     private static final int Request_User_Location_Code = 99;
 
-    private trainFetcher tf;
-    ArrayList<station> stationList;
+    private TrainFetcher tf;
+    ArrayList<TrainFetcher.station> stationList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(location_fragment, container, false);
+        View rootView = inflater.inflate(fragment_maps, container, false);
 
         // Initialise the list of all train stations
-        tf = new trainFetcher(getContext());
+        tf = new TrainFetcher(getContext());
         stationList = new ArrayList<>(tf.readStationFromXML());
 
         // Initialise MapView
@@ -184,7 +185,7 @@ public class MapsActivity extends Fragment implements
     }
 
     private void openFragment(Marker marker){
-        Fragment fragment = new stationInformationActivity();
+        Fragment fragment = new FragmentStationInformation();
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
@@ -197,8 +198,8 @@ public class MapsActivity extends Fragment implements
         }
 
         Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
-        fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, stationName);
-        fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECIEVE, position);
+        fragmentData.putString(((FragmentStationInformation) fragment).DATA_RECEIVE, stationName);
+        fragmentData.putInt(((FragmentStationInformation) fragment).INDEX_RECEIVE, position);
         fragment.setArguments(fragmentData);
 
         transaction.addToBackStack(null);

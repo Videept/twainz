@@ -1,11 +1,9 @@
 package com.example.twainz;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +12,12 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import static android.graphics.Color.rgb;
 
-public class Favourites extends Fragment {
+public class FragmentFavourites extends FragmentRoot {
 
     private View rootView;
     public static Database mDatabase;
@@ -32,10 +29,11 @@ public class Favourites extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.favourites_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_favourites_list, container, false);
+
         mDatabase = new Database(rootView.getContext()); //object of Database class
         ListView mListView = rootView.findViewById(R.id.favourites_list);
-        trainFetcher tf = new trainFetcher(rootView.getContext());
+        TrainFetcher tf = new TrainFetcher(rootView.getContext());
         //TODO: the list of all stations is just initialised for testing purposes
         //String test = tf.getStationList().get(0);
 
@@ -55,19 +53,20 @@ public class Favourites extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                android.support.v4.app.FragmentManager childManager = getFragmentManager();
+                android.support.v4.app.FragmentManager childManager = getChildFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   //Begin the fragment change
-                Fragment fragment = new stationInformationActivity();   //Initialise the new fragment
+                Fragment fragment = new FragmentStationInformation();   //Initialise the new fragment
+                fragment.setUserVisibleHint(true);
 
                 Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
-                fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, favourites_alist.get(position));
+                fragmentData.putString(((FragmentStationInformation) fragment).DATA_RECEIVE, favourites_alist.get(position));
                 fragment.setArguments(fragmentData);
                 position = tf.getStationList().indexOf(favourites_alist.get(position)); //need to get new position since favourites are out of order
-                fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECIEVE, position);
+                fragmentData.putInt(((FragmentStationInformation) fragment).INDEX_RECEIVE, position);
                 fragment.setArguments(fragmentData);
 
                 fragmentTransaction.replace(R.id.favourites_listConstraint, fragment);   //Replace favourites_listconstraint with the new fragment
-                fragmentTransaction.addToBackStack(null);   //Add the previous fragment to the stack so the back button works
+                fragmentTransaction.addToBackStack("Favourite:StationInformation");   //Add the previous fragment to the stack so the back button works
                 fragmentTransaction.commit();   //Complete the fragment transaction
             }
         });
@@ -77,15 +76,7 @@ public class Favourites extends Fragment {
         return rootView;
     }
 
-    // 
-    // public void insertData(String )
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser && isAdded()) {
-            ((MainActivity)getActivity()).setActionBarTitle(getResources().getString(R.string.fav_appbar));
-        }
-    }
+
 
 }
 
@@ -103,7 +94,7 @@ class favouritesListAdapter extends ArrayAdapter<String> {
         String station = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.favourites_view, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_favourite_row, parent, false);
         }
 
         TextView t = convertView.findViewById(R.id.stationButton);
@@ -120,12 +111,12 @@ class favouritesListAdapter extends ArrayAdapter<String> {
                 // ( since it wont be null in the next time onCreate is called )
 
                 //remove item from listview and reload listview
-                Favourites.favourites_alist.remove(station);
+                FragmentFavourites.favourites_alist.remove(station);
                 favouritesListAdapter.super.clear();
-                favouritesListAdapter.super.addAll(Favourites.favourites_alist);
+                favouritesListAdapter.super.addAll(FragmentFavourites.favourites_alist);
                 favouritesListAdapter.super.notifyDataSetChanged();
                 //remove item from database
-                Favourites.mDatabase.deleteData(station);
+                FragmentFavourites.mDatabase.deleteData(station);
 
             }
         });

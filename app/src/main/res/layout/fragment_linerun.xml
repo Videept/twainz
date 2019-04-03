@@ -5,9 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/constraintLayout2"
-    android:background="?android:windowBackground"
-    tools:context=".stationInformationActivity">
+    android:background="?android:windowBackground">
 
     <!-- "textview will say "line run for train ____ " or something like that -->
 
