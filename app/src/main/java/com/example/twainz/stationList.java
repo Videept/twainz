@@ -48,14 +48,6 @@ public class stationList extends Fragment  {
         StringAdapter adapter = new StringAdapter(rootView.getContext(), list, model);
 
 
-        model.getFavourites().observe(this, new Observer<ArrayList<String>>() {
-            @Override
-            public void onChanged(@Nullable ArrayList<String> list) {
-                model.setArrayList(list);
-                adapter.notifyDataSetChanged();
-            }
-        });
-
 
 
 
@@ -186,14 +178,14 @@ class StringAdapter extends ArrayAdapter<String> {
                     Favourites.mDatabase.deleteData(station);
                     fav_stations.remove(station);
                     //remove item from database
-                    model.setArrayList(fav_stations);
+                    model.setFavourites(fav_stations);
                 }else {
                     //add to datebase
                     //add item to database
                     Favourites.mDatabase.insertData(station);
                     ///update static favourites list for the next time onCreate is called
                     fav_stations.add(station);
-                    model.setArrayList(fav_stations);
+                    model.setFavourites(fav_stations);
                 }
 
 

@@ -52,7 +52,7 @@ public class Favourites extends Fragment {
         favourites_alist = mDatabase.displayfavourites();
 
         model = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(FavViewModel.class);
-        model.setArrayList(favourites_alist);
+        model.setFavourites(favourites_alist);
 
 
         com.example.twainz.favouritesListAdapter adapter = new com.example.twainz.favouritesListAdapter(rootView.getContext(), favourites_alist, model);
@@ -63,7 +63,9 @@ public class Favourites extends Fragment {
             @Override
             public void onChanged(@Nullable ArrayList<String> list) {
                 favourites_alist = list;
-                adapter.notifyDataSetChanged();
+                // for some reason doing the usual adapter.notifydatasetchanged() did not work here?
+                com.example.twainz.favouritesListAdapter adapter = new com.example.twainz.favouritesListAdapter(rootView.getContext(), favourites_alist, model);
+                mListView.setAdapter(adapter);
             }
         });
 
@@ -140,7 +142,8 @@ class favouritesListAdapter extends ArrayAdapter<String> {
                 //this works when favourites_alist and mDatabase are public static
                 Favourites.mDatabase.deleteData(station);
                 fav_stations.remove(station);
-                model.setArrayList(fav_stations);
+                model.setFavourites(fav_stations);
+
                 /*
                 Favourites.favourites_alist.remove(station);
                 favouritesListAdapter.super.notifyDataSetChanged();
