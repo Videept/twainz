@@ -272,8 +272,8 @@ public class TrainFetcher {
         // Remove filtered trains
         trainList.removeAll(deleteTrains);
     }
+    public Vector<station> readStationFromXML(){
 
-    private Vector<station> readStationFromXML(){
         InputStream stationFile = context.getResources().openRawResource(context.getResources().getIdentifier("station_list",
                         "raw", context.getPackageName()));
         Vector<station> sList = new Vector<>();
@@ -315,6 +315,22 @@ public class TrainFetcher {
         protected double latitude;
         protected double longitude;
         protected int stationId;
+
+        public String getStationName(){
+            return stationName;
+        }
+        public String getStationCode(){
+            return stationCode;
+        }
+        public double getLatitude(){
+            return latitude;
+        }
+        public double getLongitude(){
+            return longitude;
+        }
+        public int getStationId(){
+            return stationId;
+        }
     }
 
     public class LinerunStation {
