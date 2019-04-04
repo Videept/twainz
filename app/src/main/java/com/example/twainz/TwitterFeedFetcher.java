@@ -1,15 +1,19 @@
 package com.example.twainz;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class twitterFeed {
-    private ResponseList<Status> feed;
+public class TwitterFeedFetcher {
+    private List<Status> feed;
 
-    ResponseList<Status> getTwitterFeed(){
+    List<Status> getTwitterFeed(){
+        feed = new ArrayList<Status>();
 
         Thread network = new Thread(new Runnable() {
             @Override

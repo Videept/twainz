@@ -3,7 +3,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import java.util.Vector;
 
 import static android.graphics.Color.rgb;
 
-public class Linerun extends Fragment {
+public class FragmentLinerun extends FragmentRoot {
     private View rootView;
 
     final static String DATA_RECEIVE = "data_receive";
@@ -23,14 +22,15 @@ public class Linerun extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.activity_linerun, container, false);
-        trainFetcher tf = new trainFetcher(getContext());
+        rootView = inflater.inflate(R.layout.fragment_linerun, container, false);
+
+        TrainFetcher tf = new TrainFetcher(getContext());
+
 
         Bundle args = getArguments();
-        trainFetcher.train t = tf.getTrains().get(Integer.valueOf(args.getString(DATA_RECEIVE)));
-        ((MainActivity)getActivity()).setActionBarTitle("Line run");
+        TrainFetcher.train t = tf.getTrains().get(Integer.valueOf(args.getString(DATA_RECEIVE)));
 
-        Vector<LinerunStation> stations = new Vector<>();
+        Vector<TrainFetcher.LinerunStation> stations = new Vector<>();
         TextView display = rootView.findViewById(R.id.textView);
         String display_text = t.getType() + " to " + t.getDestination();
         display.setText(display_text);
@@ -40,17 +40,11 @@ public class Linerun extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser && isAdded()) {
-            ((MainActivity)getActivity()).setActionBarTitle("Line Run");
-        }
-    }
 
 
-    private void drawLinerun(Vector<LinerunStation> stations, final int current_station) {
-        ArrayList<LinerunStation> alist_stations = new ArrayList<>(stations);
+
+    private void drawLinerun(Vector<TrainFetcher.LinerunStation> stations, final int current_station) {
+        ArrayList<TrainFetcher.LinerunStation> alist_stations = new ArrayList<>(stations);
 
         LinerunAdapter linerunAdapter = new LinerunAdapter(rootView.getContext(), alist_stations);
 
@@ -72,9 +66,9 @@ public class Linerun extends Fragment {
 }
 
 
-class LinerunAdapter extends ArrayAdapter<LinerunStation> {
+class LinerunAdapter extends ArrayAdapter<TrainFetcher.LinerunStation> {
 
-    public LinerunAdapter(Context context, ArrayList<LinerunStation> stations) {
+    public LinerunAdapter(Context context, ArrayList<TrainFetcher.LinerunStation> stations) {
         super(context, 0, stations);
 
     }
@@ -82,7 +76,7 @@ class LinerunAdapter extends ArrayAdapter<LinerunStation> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        LinerunStation s = getItem(position);
+        TrainFetcher.LinerunStation s = getItem(position);
 
         /*TODO: fix this
         because right now you either surround this line (80) with a check to see if the convert view is null
@@ -92,7 +86,7 @@ class LinerunAdapter extends ArrayAdapter<LinerunStation> {
 
          */
 
-        convertView = LayoutInflater.from(getContext()).inflate(R.layout.linerun_row, parent, false);
+        convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_linerun_row, parent, false);
 
         TextView tv = convertView.findViewById(R.id.station_name);
         tv.setText(s.location);
