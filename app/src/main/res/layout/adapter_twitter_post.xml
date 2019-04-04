@@ -24,12 +24,4 @@
         android:autoLink="web"
         android:linksClickable="true"/>
 
-    <ImageView
-        android:layout_below="@+id/twitterContent"
-        android:id="@+id/twitterImage"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
 </RelativeLayout>
