@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/constraintLayout2"
-    android:background="?android:windowBackground">
+    android:background="@color/bckgrnd">
 
     <TextView
         android:id="@+id/refreshView"

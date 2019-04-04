@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_centerHorizontal="true">
+    android:layout_centerHorizontal="true"
+    android:background="@color/bckgrnd">
 
     <TextView
         android:id="@+id/stationView"
@@ -23,21 +24,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-        <ListView
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="65dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="15dp"
-            android:id="@+id/twitterListLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:isScrollContainer="true"
-            android:orientation="vertical"
-            android:textSize="15sp"
-            android:dividerHeight="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/stationView"/>
+    <ListView
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="65dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="15dp"
+        android:id="@+id/twitterListLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:textColor="@color/soft_white"
+        android:textSize="15sp"
+        android:dividerHeight="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/stationView"/>
 
     <ImageView
         android:id="@+id/imageView"
