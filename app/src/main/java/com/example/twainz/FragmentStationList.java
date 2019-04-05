@@ -14,17 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-public class stationList extends Fragment  {
+public class FragmentStationList extends FragmentRoot {
     private ListView mListView;
     private View rootView;
     private static ArrayList<String> list;  //had to make this static to avoid having to make it final
@@ -35,11 +33,11 @@ public class stationList extends Fragment  {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.activity_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_station_list, container, false);
 
         mListView = rootView.findViewById(R.id.listView);
         EditText searchbar = rootView.findViewById(R.id.search_text);
-        final trainFetcher tf = new trainFetcher(getContext());
+        final TrainFetcher tf = new TrainFetcher(getContext());
 
         favourites_list_s = Favourites.mDatabase.displayfavourites();
 
@@ -63,21 +61,19 @@ public class stationList extends Fragment  {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String search = list.get(position);
 
-                android.support.v4.app.FragmentManager childManager = getFragmentManager();
-                android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   //Begin the fragment change
-                Fragment fragment = new stationInformationActivity();   //Initialise the new fragment
+                Fragment fragment = new FragmentStationInformation();   //Initialise the new fragment
 
                 Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
-                fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, search);
+                fragmentData.putString(((FragmentStationInformation) fragment).DATA_RECEIVE, search);
                 if(!searchbar.getText().toString().equals("")) {
                     position = tf.getStationList().indexOf(list.get(position));
                 }
-                fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECIEVE, position);
+                fragmentData.putInt(((FragmentStationInformation)fragment).INDEX_RECEIVE, position);
+                fragmentData.putString(((FragmentStationInformation) fragment).IS_JOURNEY_PLANNER, "false");
+
                 fragment.setArguments(fragmentData);
 
-                fragmentTransaction.replace(R.id.listConstraintLayout, fragment);   //Replace listConstraintLayout with the new fragment
-                fragmentTransaction.addToBackStack(null);   //Add the previous fragment to the stack so the back button works
-                fragmentTransaction.commit();   //Complete the fragment transaction
+                launchFragment(fragment, search, R.id.listConstraintLayout, fragmentData);
             }
         });
 
@@ -108,14 +104,6 @@ public class stationList extends Fragment  {
         return rootView;
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser && isAdded()) {
-            ((MainActivity)getActivity()).setActionBarTitle(getResources().getString(R.string.app_name));
-        }
-    }
-
 
     private ArrayList<String> SearchSequence(CharSequence s, ArrayList<String> list){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
@@ -139,8 +127,8 @@ public class stationList extends Fragment  {
 //Custom adapter class to ensure new buttons are uniquely tagged so UI callbacks can be processed correctly
 class StringAdapter extends ArrayAdapter<String> {
 
-    public StringAdapter(Context context, ArrayList<String> parent_stations) {
-        super(context, 0, parent_stations);
+    public StringAdapter(Context context, ArrayList<String> stations) {
+        super(context, 0, stations);
 
     }
 

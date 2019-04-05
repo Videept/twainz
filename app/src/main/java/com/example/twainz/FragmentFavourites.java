@@ -23,7 +23,7 @@ import java.util.Objects;
 
 import static android.graphics.Color.rgb;
 
-public class Favourites extends Fragment {
+public class FragmentFavourites extends FragmentRoot {
 
     private View rootView;
     public static Database mDatabase;
@@ -34,10 +34,11 @@ public class Favourites extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.favourites_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_favourites_list, container, false);
+
         mDatabase = new Database(rootView.getContext()); //object of Database class
         ListView mListView = rootView.findViewById(R.id.favourites_list);
-        trainFetcher tf = new trainFetcher(rootView.getContext());
+        TrainFetcher tf = new TrainFetcher(rootView.getContext());
 
         favourites_list_f = mDatabase.displayfavourites();
 
@@ -61,21 +62,22 @@ public class Favourites extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                android.support.v4.app.FragmentManager childManager = getFragmentManager();
+                android.support.v4.app.FragmentManager childManager = getChildFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = childManager.beginTransaction();   //Begin the fragment change
-                Fragment fragment = new stationInformationActivity();   //Initialise the new fragment
+                Fragment fragment = new FragmentStationInformation();   //Initialise the new fragment
+                fragment.setUserVisibleHint(true);
 
                 Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
-               // fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, model.getArrayList(rootView.getContext()).get(position));
+               // fragmentData.putString(((FragmentStationInformation) fragment).DATA_RECEIVE, model.getArrayList(rootView.getContext()).get(position));
                 fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, favourites_list_f.get(position));
                 fragment.setArguments(fragmentData);
                 //position = tf.getStationList().indexOf(model.getArrayList(rootView.getContext()).get(position)); //need to get new position since favourites are out of order
                 position = tf.getStationList().indexOf(favourites_list_f.get(position)); //need to get new position since favourites are out of order
-                fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECIEVE, position);
+                fragmentData.putInt(((FragmentStationInformation) fragment).INDEX_RECEIVE, position);
                 fragment.setArguments(fragmentData);
 
                 fragmentTransaction.replace(R.id.favourites_listConstraint, fragment);   //Replace favourites_listconstraint with the new fragment
-                fragmentTransaction.addToBackStack(null);   //Add the previous fragment to the stack so the back button works
+                fragmentTransaction.addToBackStack("Favourite:StationInformation");   //Add the previous fragment to the stack so the back button works
                 fragmentTransaction.commit();   //Complete the fragment transaction
             }
         });
@@ -86,13 +88,6 @@ public class Favourites extends Fragment {
     }
 
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser && isAdded()) {
-            ((MainActivity)getActivity()).setActionBarTitle(getResources().getString(R.string.fav_appbar));
-        }
-    }
 
 }
 
@@ -108,7 +103,7 @@ class favouritesListAdapter extends ArrayAdapter<String> {
         String station = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.favourites_view, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_favourite_row, parent, false);
         }
 
         TextView t = convertView.findViewById(R.id.stationButton);
