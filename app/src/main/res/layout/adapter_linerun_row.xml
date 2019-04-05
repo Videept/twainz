@@ -18,7 +18,7 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="69dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginEnd="8dp"
@@ -30,7 +30,7 @@
 
             <FrameLayout
                 android:id="@+id/relative"
-                android:layout_width="wrap_content"
+                android:layout_width="49dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
@@ -46,21 +46,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <View
-                        android:id="@+id/view_bar"
-                        android:layout_width="30dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp"
-                        android:background="@android:color/black"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="64dp"
+                        android:layout_height="69dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:srcCompat="@drawable/railway" />
 
                 </android.support.constraint.ConstraintLayout>
 
@@ -69,43 +66,47 @@
 
             <TextView
                 android:id="@+id/station_name"
-                android:layout_width="113dp"
-                android:layout_height="35dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
+                android:layout_width="120dp"
+                android:layout_height="21dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
+                android:background="@drawable/button_bg_rounded_corners"
                 android:text="TextView"
+                android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/relative"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.517"
                 tools:text="Raheny Station" />
 
             <TextView
                 android:id="@+id/arrival_time"
-                android:layout_width="71dp"
-                android:layout_height="24dp"
+                android:layout_width="83dp"
+                android:layout_height="20dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="16dp"
+                android:background="@drawable/button_bg_rounded_corners"
                 android:text="TextView"
+                android:textAlignment="center"
                 app:layout_constraintStart_toEndOf="@+id/relative"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="12:34" />
 
             <TextView
                 android:id="@+id/delay"
-                android:layout_width="77dp"
-                android:layout_height="25dp"
+                android:layout_width="83dp"
+                android:layout_height="17dp"
                 android:layout_marginEnd="80dp"
                 android:layout_marginRight="80dp"
                 android:layout_marginBottom="8dp"
                 android:text="TextView"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="10sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

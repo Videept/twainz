@@ -4,72 +4,135 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-    <LinearLayout
-        android:id="@+id/journeyDialog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <!--android:background="?android:selectableItemBackground"-->
-
-        <ImageButton
-            android:id="@+id/changeDirButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@null"
-            android:contentDescription="@string/swap_directions_button"
-            app:srcCompat="@mipmap/twainz_icon_round" />
-
-        <AutoCompleteTextView
-            android:id="@+id/editText_dest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:hint="Destination"
-            android:inputType="textNoSuggestions"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="Dublin Pearse"
-            android:textSize="36sp"
-            tools:ignore="Autofill" />
-
-    </LinearLayout>
-
-
-    <AutoCompleteTextView
-        android:id="@+id/editText_orig"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:gravity="center"
-        android:hint="Origin"
-        android:inputType="textNoSuggestions"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="Sandycove"
-        android:textSize="36sp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="Autofill"
-        tools:layout_editor_absoluteX="176dp" />
 
     <FrameLayout
         android:id="@+id/fragFrame"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/journeyDialog"
-        app:layout_constraintTop_toBottomOf="@id/editText_orig"
-        tools:layout_editor_absoluteX="8dp" />
+        android:layout_marginTop="152dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="395dp"
+        android:layout_height="130dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="20dp"
+        android:paddingRight="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/fragFrame"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginRight="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editText_orig"
+            app:layout_constraintEnd_toStartOf="@+id/editText_orig"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editText_orig"
+            app:layout_constraintVertical_bias="0.466"
+            app:srcCompat="@drawable/location" />
+
+        <AutoCompleteTextView
+            android:id="@+id/editText_orig"
+            android:layout_width="225dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/button_bg_rounded_corners"
+            android:gravity="center|start"
+            android:hint="Origin"
+            android:inputType="textNoSuggestions"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Sandycove"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toStartOf="@+id/changeDirButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="Autofill" />
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginRight="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editText_dest"
+            app:layout_constraintEnd_toStartOf="@+id/editText_dest"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editText_dest"
+            app:srcCompat="@drawable/destination" />
+
+        <AutoCompleteTextView
+            android:id="@+id/editText_dest"
+            android:layout_width="225dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/button_bg_rounded_corners"
+            android:gravity="center|start"
+            android:hint="Destination"
+            android:inputType="textNoSuggestions"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Dublin Pearse"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/changeDirButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText_orig"
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="Autofill" />
+
+        <ImageButton
+            android:id="@+id/changeDirButton"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="220dp"
+            android:layout_marginLeft="220dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:adjustViewBounds="false"
+            android:background="@null"
+            android:contentDescription="@string/swap_directions_button"
+            app:layout_constraintBottom_toBottomOf="@+id/editText_dest"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editText_orig"
+            app:layout_constraintVertical_bias="0.53"
+            app:srcCompat="@mipmap/twainz_icon_round" />
+
+    </android.support.constraint.ConstraintLayout>
 
 
 </android.support.constraint.ConstraintLayout>
