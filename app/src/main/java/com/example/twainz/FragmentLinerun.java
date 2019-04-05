@@ -2,11 +2,13 @@ package com.example.twainz;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -98,19 +100,21 @@ class LinerunAdapter extends ArrayAdapter<TrainFetcher.LinerunStation> {
         tv = convertView.findViewById(R.id.delay);
         String del_mins = String.valueOf(Math.abs(s.delay));
         if(s.delay < 0){
-            tv.setText(del_mins +" mins late");
+            tv.setText(del_mins +" MINS LATE");
             tv.setTextColor(rgb(242, 9, 71));
         }else if (s.delay > 0){
-            tv.setText(del_mins +" mins early");
+            tv.setText(del_mins +" MINS EARLY");
             tv.setTextColor(rgb(47, 191, 47));
         }else {
-            tv.setText("- on time");
+            tv.setText("ON TIME");
         }
 
+        ImageView imageView = convertView.findViewById(R.id.imageView);
+
         if(s.visited){
-            convertView.findViewById(R.id.view_bar).setBackgroundColor(rgb(229, 220, 137));
+            imageView.setImageResource(R.drawable.visited);
         }else{
-            convertView.findViewById(R.id.view_bar).setBackgroundColor(rgb(209, 213, 214));
+            imageView.setImageResource(R.drawable.railway);
         }
 
         return convertView;
