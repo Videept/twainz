@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bckgrnd">
 
 
     <TableLayout
@@ -19,10 +20,11 @@
             <TextView
                 android:id="@+id/trainTypeView"
                 android:layout_width="60dp"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:text="Type"
+                android:textColor="@color/soft_white"
                 app:autoSizeMaxTextSize="24sp"
                 app:autoSizeMinTextSize="12sp"
                 app:autoSizeStepGranularity="2sp"
@@ -30,10 +32,11 @@
 
             <TextView
                 android:id="@+id/trainDestinationView"
-                android:layout_width="163dp"
+                android:layout_width="132dp"
                 android:layout_height="40dp"
-                android:text="Destination"
                 android:layout_marginRight="5dp"
+                android:text="Destination"
+                android:textColor="@color/soft_white"
                 app:autoSizeMaxTextSize="24sp"
                 app:autoSizeMinTextSize="12sp"
                 app:autoSizeStepGranularity="2sp"
@@ -43,6 +46,7 @@
                 android:id="@+id/arrivalTimeView"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
+                android:textColor="@color/soft_white"
                 android:text="Time to arrival"
                 android:layout_marginRight="5dp"
                 android:gravity="right"

@@ -200,10 +200,18 @@ public class FragmentMaps extends FragmentRoot implements
         Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
         fragmentData.putString(((FragmentStationInformation) fragment).DATA_RECEIVE, stationName);
         fragmentData.putInt(((FragmentStationInformation) fragment).INDEX_RECEIVE, position);
+        fragmentData.putString(((FragmentStationInformation) fragment).IS_JOURNEY_PLANNER, "false");
         fragment.setArguments(fragmentData);
 
         transaction.addToBackStack(null);
         transaction.add(R.id.fragment_container, fragment).commit();
+
+
+
+
+
+
+
     }
 
     @Override

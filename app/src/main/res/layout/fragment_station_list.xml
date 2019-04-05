@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/listConstraintLayout">
+    android:id="@+id/listConstraintLayout"
+    android:background="@color/bckgrnd">
 
     <ListView
         android:id="@+id/listView"
@@ -31,6 +32,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="12dp"
         android:ems="10"
+        android:textColorHint="@color/soft_white"
         android:hint="@string/search_hint"
         android:inputType="textCapWords"
         android:text=""
