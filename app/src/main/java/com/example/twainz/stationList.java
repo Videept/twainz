@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.StaticLayout;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,7 @@ public class stationList extends Fragment  {
     private static ArrayList<String> list;  //had to make this static to avoid having to make it final
                                                 //(it would otherwise have to be final inside the textwatcher)
 
-    private FavViewModel model;
+    public static ArrayList<String> favourites_list_s;
 
     @Nullable
     @Override
@@ -39,21 +40,21 @@ public class stationList extends Fragment  {
         mListView = rootView.findViewById(R.id.listView);
         EditText searchbar = rootView.findViewById(R.id.search_text);
         final trainFetcher tf = new trainFetcher(getContext());
-        model =  ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(FavViewModel.class);
 
+        favourites_list_s = Favourites.mDatabase.displayfavourites();
 
         list = new ArrayList<>(tf.getStationList());
-        StringAdapter adapter = new StringAdapter(rootView.getContext(), list, model);
+       StringAdapter adapter = new StringAdapter(rootView.getContext(), list);
 
-        Observable.OnPropertyChangedCallback onPropertyChangedCallback = new Observable.OnPropertyChangedCallback() {
+
+        Favourites.model.station_reload_needed.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                StringAdapter adapter = new StringAdapter(rootView.getContext(), list, model);
+                StringAdapter adapter = new StringAdapter(rootView.getContext(), list);
                 mListView.setAdapter(adapter);
-            }
-        };
 
-        model.reload_needed.addOnPropertyChangedCallback(onPropertyChangedCallback);
+            }
+        });
 
 
         mListView.setAdapter(adapter);
@@ -137,12 +138,10 @@ public class stationList extends Fragment  {
 }
 //Custom adapter class to ensure new buttons are uniquely tagged so UI callbacks can be processed correctly
 class StringAdapter extends ArrayAdapter<String> {
-    private FavViewModel model;
-    private ArrayList<String> fav_stations;
-    public StringAdapter(Context context, ArrayList<String> parent_stations, FavViewModel _model) {
+
+    public StringAdapter(Context context, ArrayList<String> parent_stations) {
         super(context, 0, parent_stations);
-        model = _model;
-        fav_stations = model.getArrayList();
+
     }
 
     @Override
@@ -161,7 +160,7 @@ class StringAdapter extends ArrayAdapter<String> {
 
         final CheckBox cb = convertView.findViewById(R.id.checkBox2);
 
-        cb.setChecked(fav_stations.contains(station));
+        cb.setChecked(stationList.favourites_list_s.contains(station));
 
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,14 +168,15 @@ class StringAdapter extends ArrayAdapter<String> {
                 if(!cb.isChecked()){
                     //remove from database
                     Favourites.mDatabase.deleteData(station);
-                    fav_stations.remove(station);
+                    stationList.favourites_list_s.remove(station);
 
                 }else {
                     //add to datebase
                     Favourites.mDatabase.insertData(station);
-                    fav_stations.add(station);
+                    stationList.favourites_list_s.add(station);
                 }//set favourites
-                model.setFavourites(fav_stations);
+                Favourites.favourites_list_f = stationList.favourites_list_s;
+                Favourites.model.favourites_reload_needed.set(!Favourites.model.favourites_reload_needed.get());
             }
         });
         return convertView;

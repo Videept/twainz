@@ -3,9 +3,11 @@ package com.example.twainz;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.databinding.Observable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -25,8 +29,8 @@ public class Favourites extends Fragment {
     public static Database mDatabase;
     //set true if the favourites list needs to be reloaded by another class
     // cant make this an array of ints since we need to reference the stations by station name
-    private static FavViewModel model = null;
-
+    public static FavViewModel model = null;
+    public static ArrayList<String> favourites_list_f;
     @Nullable
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -35,24 +39,23 @@ public class Favourites extends Fragment {
         ListView mListView = rootView.findViewById(R.id.favourites_list);
         trainFetcher tf = new trainFetcher(rootView.getContext());
 
-        if(model == null) {
-            model = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(FavViewModel.class);
-            model.setFavourites(mDatabase.displayfavourites());
-        }
+        favourites_list_f = mDatabase.displayfavourites();
 
+        model = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(FavViewModel.class);
 
-        com.example.twainz.favouritesListAdapter adapter = new com.example.twainz.favouritesListAdapter(rootView.getContext(), model.getArrayList(), model);
+        model.favourites_reload_needed.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                com.example.twainz.favouritesListAdapter adapter = new com.example.twainz.favouritesListAdapter(rootView.getContext(), favourites_list_f);
+                mListView.setAdapter(adapter);
+
+            }
+        });
+
+        com.example.twainz.favouritesListAdapter adapter = new com.example.twainz.favouritesListAdapter(rootView.getContext(), favourites_list_f);
         mListView.setAdapter(adapter);
 
 
-        model.getFavourites().observe(this, new Observer<ArrayList<String>>() {
-            @Override
-            public void onChanged(@Nullable ArrayList<String> list) {
-                // for some reason doing the usual adapter.notifydatasetchanged() did not work here?
-                com.example.twainz.favouritesListAdapter adapter = new com.example.twainz.favouritesListAdapter(rootView.getContext(), list, model);
-                mListView.setAdapter(adapter);
-            }
-        });
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -63,9 +66,11 @@ public class Favourites extends Fragment {
                 Fragment fragment = new stationInformationActivity();   //Initialise the new fragment
 
                 Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
-                fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, model.getArrayList().get(position));
+               // fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, model.getArrayList(rootView.getContext()).get(position));
+                fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, favourites_list_f.get(position));
                 fragment.setArguments(fragmentData);
-                position = tf.getStationList().indexOf(model.getArrayList().get(position)); //need to get new position since favourites are out of order
+                //position = tf.getStationList().indexOf(model.getArrayList(rootView.getContext()).get(position)); //need to get new position since favourites are out of order
+                position = tf.getStationList().indexOf(favourites_list_f.get(position)); //need to get new position since favourites are out of order
                 fragmentData.putInt(((stationInformationActivity) fragment).INDEX_RECIEVE, position);
                 fragment.setArguments(fragmentData);
 
@@ -80,8 +85,7 @@ public class Favourites extends Fragment {
         return rootView;
     }
 
-    // 
-    // public void insertData(String )
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -94,13 +98,9 @@ public class Favourites extends Fragment {
 
 class favouritesListAdapter extends ArrayAdapter<String> {
 
-    private ArrayList<String> fav_stations;
-    private FavViewModel model;
 
-    public favouritesListAdapter(Context context, ArrayList<String> parent_favourite_stations, FavViewModel _model) {
+    public favouritesListAdapter(Context context, ArrayList<String> parent_favourite_stations) {
         super(context, 0, parent_favourite_stations);
-        fav_stations = parent_favourite_stations;
-        model = _model;
     }
 
     @Override
@@ -119,10 +119,14 @@ class favouritesListAdapter extends ArrayAdapter<String> {
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                cb.setChecked(true);
                 Favourites.mDatabase.deleteData(station);
-                model.reload_needed.set(!model.reload_needed.get());
-                fav_stations.remove(station);
-                model.setFavourites(fav_stations);
+                Favourites.favourites_list_f.remove(station);
+                stationList.favourites_list_s = Favourites.favourites_list_f;
+                //Favourites.model.favourites_reload_needed.set(!Favourites.model.favourites_reload_needed.get());
+                favouritesListAdapter.super.notifyDataSetChanged();
+                Favourites.model.station_reload_needed.set(!Favourites.model.station_reload_needed.get());    //reload the station list
+
             }
         });
         return convertView;
