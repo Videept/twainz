@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -39,13 +40,13 @@ public class FragmentStationList extends FragmentRoot {
         EditText searchbar = rootView.findViewById(R.id.search_text);
         final TrainFetcher tf = new TrainFetcher(getContext());
 
-        favourites_list_s = Favourites.mDatabase.displayfavourites();
+        favourites_list_s = FragmentFavourites.mDatabase.displayfavourites();
 
         list = new ArrayList<>(tf.getStationList());
        StringAdapter adapter = new StringAdapter(rootView.getContext(), list);
 
 
-        Favourites.model.station_reload_needed.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+        FragmentFavourites.model.station_reload_needed.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 StringAdapter adapter = new StringAdapter(rootView.getContext(), list);
@@ -139,7 +140,7 @@ class StringAdapter extends ArrayAdapter<String> {
         //if (convertView == null) {
         //removed null check to stop convert view from reusing layouts like in linerun.
         //this causes less smooth performance though
-        convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_view, parent, false);
+        convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_station_list_row, parent, false);
         //}
 
         TextView t = convertView.findViewById(R.id.stationButton);
@@ -148,23 +149,23 @@ class StringAdapter extends ArrayAdapter<String> {
 
         final CheckBox cb = convertView.findViewById(R.id.checkBox2);
 
-        cb.setChecked(stationList.favourites_list_s.contains(station));
+        cb.setChecked(FragmentStationList.favourites_list_s.contains(station));
 
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!cb.isChecked()){
                     //remove from database
-                    Favourites.mDatabase.deleteData(station);
-                    stationList.favourites_list_s.remove(station);
+                    FragmentFavourites.mDatabase.deleteData(station);
+                    FragmentStationList.favourites_list_s.remove(station);
 
                 }else {
                     //add to datebase
-                    Favourites.mDatabase.insertData(station);
-                    stationList.favourites_list_s.add(station);
+                    FragmentFavourites.mDatabase.insertData(station);
+                    FragmentStationList.favourites_list_s.add(station);
                 }//set favourites
-                Favourites.favourites_list_f = stationList.favourites_list_s;
-                Favourites.model.favourites_reload_needed.set(!Favourites.model.favourites_reload_needed.get());
+                FragmentFavourites.favourites_list_f = FragmentStationList.favourites_list_s;
+                FragmentFavourites.model.favourites_reload_needed.set(!FragmentFavourites.model.favourites_reload_needed.get());
             }
         });
         return convertView;

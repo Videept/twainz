@@ -69,7 +69,7 @@ public class FragmentFavourites extends FragmentRoot {
 
                 Bundle fragmentData = new Bundle(); //This bundle is used to pass the position of the selected train to the linerun fragment
                // fragmentData.putString(((FragmentStationInformation) fragment).DATA_RECEIVE, model.getArrayList(rootView.getContext()).get(position));
-                fragmentData.putString(((stationInformationActivity) fragment).DATA_RECEIVE, favourites_list_f.get(position));
+                fragmentData.putString(((FragmentStationInformation) fragment).DATA_RECEIVE, favourites_list_f.get(position));
                 fragment.setArguments(fragmentData);
                 //position = tf.getStationList().indexOf(model.getArrayList(rootView.getContext()).get(position)); //need to get new position since favourites are out of order
                 position = tf.getStationList().indexOf(favourites_list_f.get(position)); //need to get new position since favourites are out of order
@@ -115,12 +115,12 @@ class favouritesListAdapter extends ArrayAdapter<String> {
             @Override
             public void onClick(View view) {
                 cb.setChecked(true);
-                Favourites.mDatabase.deleteData(station);
-                Favourites.favourites_list_f.remove(station);
-                stationList.favourites_list_s = Favourites.favourites_list_f;
+                FragmentFavourites.mDatabase.deleteData(station);
+                FragmentFavourites.favourites_list_f.remove(station);
+                FragmentStationList.favourites_list_s = FragmentFavourites.favourites_list_f;
                 //Favourites.model.favourites_reload_needed.set(!Favourites.model.favourites_reload_needed.get());
                 favouritesListAdapter.super.notifyDataSetChanged();
-                Favourites.model.station_reload_needed.set(!Favourites.model.station_reload_needed.get());    //reload the station list
+                FragmentFavourites.model.station_reload_needed.set(!FragmentFavourites.model.station_reload_needed.get());    //reload the station list
 
             }
         });
