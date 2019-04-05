@@ -2,11 +2,12 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/darktheme"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="?android:windowBackground"
+    android:background="@color/bckgrnd"
     tools:context=".MainActivity">
 
     <android.support.v4.view.ViewPager
@@ -22,9 +23,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.design.widget.TabLayout
+        android:background="@color/colorPrimaryDark"
         android:id="@+id/tabLayout"
+        android:layout_height="60dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         app:layout_anchor="@+id/container"
         app:layout_anchorGravity="top|center"
         app:layout_constraintBottom_toBottomOf="parent"

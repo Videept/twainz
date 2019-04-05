@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:gravity="center"
+            android:textColor="@color/JourneyPlannerColor"
             android:hint="Destination"
             android:inputType="textNoSuggestions"
             android:paddingTop="10dp"

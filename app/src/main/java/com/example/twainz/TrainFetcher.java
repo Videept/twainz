@@ -368,7 +368,26 @@ public class TrainFetcher {
         }
         public String getId(){ return id; }
         public String getDate(){ return date; }
-        public byte getDueTime(){ return dueTime; }
+        public String getDueTime(){
+            int hours = dueTime/60;
+            int minutes = dueTime%60;
+            String s1 = Integer.toString(hours);
+            String s2 = Integer.toString(minutes);
+            String s3 = " hr ";
+            String s5 = " mins ";
+            String s4,s6;
+            // if due time greater than 1 hour
+            if(hours!=0) {
+                s4 = s1.concat(s3);
+                s6 = s4.concat(s2);
+                String finalstring1 = s6.concat(s5);
+                return finalstring1;
+            }
+            else{
+                String finalstring2 = s2.concat(s5);
+                return finalstring2;
+            }
+        }
 
         @Override
         public int compareTo(train o) {
