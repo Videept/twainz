@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
@@ -239,7 +240,40 @@ public class TrainFetcher {
                 e.printStackTrace();
             }
 
-            Collections.sort(trainList);
+
+            //sort according to due time
+            Collections.sort(trainList, new Comparator<train>() {
+
+                @Override
+                public int compare(train o1, train o2) {
+                    String train1 = o1.getDueTime();
+                    String train2 = o2.getDueTime();
+                    //Split the string according to whitespace
+                    String[] t1 = train1.split(" ",0);
+                    String[] t2 = train2.split(" ",0);
+                    if (train1.charAt(2) == 'h') {
+                        //train1 in hour and train2 in mins then duetime of train1 is greater than train2
+                        //train1 and train2 both in hour then check number of hours
+                        if (train2.charAt(2) != 'h' || Integer.valueOf(t1[0]) > Integer.valueOf(t2[0])) {
+                            return 1;
+                        }
+                        //train1 and train2 both in equal hours then check minutes
+                        else if (Integer.valueOf(t1[0]) == Integer.valueOf(t2[0]) && Integer.valueOf(t1[2]) > Integer.valueOf(t2[2])) {
+                            return 1;
+                        }
+                        else {
+                            return -1;
+                        }
+                    }
+                    else{
+                        if (train2.charAt(2) == 'h' || Integer.valueOf(t1[0]) < Integer.valueOf(t2[0])) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    }
+                }
+            });
 
             return trainList;
 
