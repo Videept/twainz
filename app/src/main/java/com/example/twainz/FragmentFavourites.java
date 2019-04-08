@@ -107,7 +107,6 @@ class favouritesListAdapter extends ArrayAdapter<String> {
         TextView t = convertView.findViewById(R.id.stationButton);
         t.setText(station);
         t.setTag(position);
-        t.setBackgroundColor(rgb(244, 129, 145));
         CheckBox cb = convertView.findViewById(R.id.checkBox);
         cb.setOnClickListener(new View.OnClickListener() {
             @Override

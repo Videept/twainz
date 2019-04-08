@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#BC69C5BB</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimaryDark">#026D62</color>
     <color name="colorAccent">#6AF0DE</color>
     <color name="current_station">#c61792</color>
     <color name="bckgrnd">#2E2E2E</color>

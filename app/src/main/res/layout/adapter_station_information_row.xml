@@ -25,7 +25,7 @@
                 android:layout_marginRight="5dp"
                 android:text="Type"
                 android:textColor="@color/soft_white"
-                app:autoSizeMaxTextSize="24sp"
+                app:autoSizeMaxTextSize="20sp"
                 app:autoSizeMinTextSize="12sp"
                 app:autoSizeStepGranularity="2sp"
                 app:autoSizeTextType="uniform" />
@@ -37,7 +37,7 @@
                 android:layout_marginRight="5dp"
                 android:text="Destination"
                 android:textColor="@color/soft_white"
-                app:autoSizeMaxTextSize="24sp"
+                app:autoSizeMaxTextSize="20sp"
                 app:autoSizeMinTextSize="12sp"
                 app:autoSizeStepGranularity="2sp"
                 app:autoSizeTextType="uniform" />
@@ -46,11 +46,11 @@
                 android:id="@+id/arrivalTimeView"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
-                android:textColor="@color/soft_white"
-                android:text="Time to arrival"
                 android:layout_marginRight="5dp"
                 android:gravity="right"
-                app:autoSizeMaxTextSize="24sp"
+                android:text="Time to arrival"
+                android:textColor="@color/soft_white"
+                app:autoSizeMaxTextSize="20sp"
                 app:autoSizeMinTextSize="12sp"
                 app:autoSizeStepGranularity="2sp"
                 app:autoSizeTextType="uniform" />
