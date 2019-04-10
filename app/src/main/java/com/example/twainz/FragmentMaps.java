@@ -30,6 +30,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 
 
 import static com.example.twainz.R.layout.fragment_maps;
+import static java.lang.Boolean.valueOf;
 
 /**
  * A fragment that launches other parts of the demo application.
@@ -97,10 +99,20 @@ public class FragmentMaps extends FragmentRoot implements
                 }
 
                 addMarkersToMap();
+
+                pointCameraToDublin(mMap);
             }
         });
 
         return rootView;
+    }
+
+    private void pointCameraToDublin(GoogleMap mMap){
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(53.350140,-6.266155))
+                .zoom(10)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     public boolean checkUserLocationPermission(){
@@ -154,6 +166,7 @@ public class FragmentMaps extends FragmentRoot implements
             name = stationList.get(i).getStationName();
             lat = stationList.get(i).getLatitude();
             lng = stationList.get(i).getLongitude();
+            if(name.equals("City Junction") ||name.equals("Central Junction"))continue;
 
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lng))

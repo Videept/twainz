@@ -1323,16 +1323,16 @@
     <objStation>
         <StationDesc>Dunmurray</StationDesc>
         <StationAlias>Dublin Belfast</StationAlias>
-        <StationLatitude>0</StationLatitude>
-        <StationLongitude>0</StationLongitude>
+        <StationLatitude>54.553492</StationLatitude>
+        <StationLongitude>-6.002831</StationLongitude>
         <StationCode>DUNMR</StationCode>
         <StationId>1518</StationId>
     </objStation>
     <objStation>
         <StationDesc>Moira</StationDesc>
         <StationAlias>Dublin Belfast</StationAlias>
-        <StationLatitude>0</StationLatitude>
-        <StationLongitude>0</StationLongitude>
+        <StationLatitude>54.492032</StationLatitude>
+        <StationLongitude>-6.213427</StationLongitude>
         <StationCode>MOIRA</StationCode>
         <StationId>1519</StationId>
     </objStation>
