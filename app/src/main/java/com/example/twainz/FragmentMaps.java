@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.twainz.TrainFetcher.station;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -37,9 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
-
 import static com.example.twainz.R.layout.fragment_maps;
-import static java.lang.Boolean.valueOf;
 
 /**
  * A fragment that launches other parts of the demo application.
@@ -162,6 +159,7 @@ public class FragmentMaps extends FragmentRoot implements
         // Add some markers to the map, and add a data object to each marker.
         String name;
         double lat, lng;
+        float hue = 162;
         for (int i = 0; i < stationList.size(); i++) {
             name = stationList.get(i).getStationName();
             lat = stationList.get(i).getLatitude();
@@ -171,7 +169,7 @@ public class FragmentMaps extends FragmentRoot implements
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lng))
                     .title(name)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))); //#70AD47
+                    .icon(BitmapDescriptorFactory.defaultMarker(hue))); //#70AD47
             marker.setTag(0);
         }
 
