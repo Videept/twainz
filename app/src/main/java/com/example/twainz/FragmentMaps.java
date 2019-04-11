@@ -214,15 +214,21 @@ public class FragmentMaps extends FragmentRoot implements
         fragmentData.putString(((FragmentStationInformation) fragment).IS_JOURNEY_PLANNER, "false");
         fragment.setArguments(fragmentData);
 
-        transaction.addToBackStack(null);
+        transaction.addToBackStack("FragmentsMaps");
         transaction.add(R.id.fragment_container, fragment).commit();
+    }
 
+    // had to declare onBackPressed() as a boolean because it's declared as a
+    // boolean in FragmentMaps
+    @Override
+    public boolean onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
 
-
-
-
-
-
+        return true; // return true every time
     }
 
     @Override
