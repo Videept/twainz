@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#BC69C5BB</color>
+    <color name="colorPrimaryDark">#026D62</color>
     <color name="colorAccent">#6AF0DE</color>
     <color name="current_station">#c61792</color>
-    <color name="soft_white">#fcedf7</color>
+    <color name="bckgrnd">#2E2E2E</color>
+    
+    <color name="black">#000000</color>
+    <color name="bckgrndLight">#414141</color>
+    <color name="soft_white">#919191</color>
+    <color name="softer_white">#747474</color>
+    <color name="JourneyPlannerColor">#353535</color>
     <color name= "late_red">#f20947</color>
     <color name="early_green">#2fbf2f</color>
 </resources>

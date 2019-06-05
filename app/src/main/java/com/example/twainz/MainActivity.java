@@ -1,27 +1,52 @@
 package com.example.twainz;
 
 import android.support.design.widget.TabLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.SparseArray;
+import android.view.ViewGroup;
+
+import java.util.Stack;
 
 
 public class MainActivity extends AppCompatActivity{
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    public static Stack<String>[] appTitles;
+    public int currentPage;
+
+
+    final int[] ICONS = new int[]{
+            R.drawable.journey,
+            R.drawable.station,
+            R.drawable.favourite,
+            R.drawable.twitter,
+            R.drawable.nearme};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        appTitles = new Stack[5]; //Initialise the title stacks
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setIcon(R.mipmap.logo);
+
+        for (int i = 0; i < 5; i++)
+            appTitles[i] = new Stack();
+
+        //Add the titles to the stacks
+        appTitles[0].push("Journey Planner");
+        appTitles[1].push("Stations");
+        appTitles[2].push("Favourites");
+        appTitles[3].push("Twitter");
+        appTitles[4].push("Map");
 
         // Create the adapter that will return a fragment for each of the two
         // primary sections of the activity.
@@ -35,101 +60,89 @@ public class MainActivity extends AppCompatActivity{
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
-        mViewPager.setCurrentItem(1);
-    }
+        tabLayout.getTabAt(0).setIcon(ICONS[0]);
+        tabLayout.getTabAt(1).setIcon(ICONS[1]);
+        tabLayout.getTabAt(2).setIcon(ICONS[2]);
+        tabLayout.getTabAt(3).setIcon(ICONS[3]);
+        tabLayout.getTabAt(4).setIcon(ICONS[4]);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+                ActionBar actionBar = getsupportactionbar();
+                currentPage = i;
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void setActionBarTitle(String title) {
-        getSupportActionBar().setTitle(title);
-    }
-
- /*   @Override
-    public void onBackPressed() {
-
-        int count = getFragmentManager().getBackStackEntryCount();
-
-        if (count == 0) {
-            super.onBackPressed();
-
-        } else {
-            getFragmentManager().popBackStack();
-        }
-
-    }
-*/
-    @Override
-    public void onBackPressed() {
-
-        FragmentManager fm = getSupportFragmentManager();
-       /* for (Fragment frag : fm.getFragments()) {
-            if (frag.isVisible()) { //If this is the current fragment
-
-                FragmentManager childFm = frag.getChildFragmentManager();
-
-                if (childFm.getBackStackEntryCount() > 0) { //Check if it has any child fragments on its stack
-                    if (childFm.getBackStackEntryCount() > 1) {
-                        Fragment f = childFm.getFragments().get(childFm.getBackStackEntryCount() - 2);
-                        f.setUserVisibleHint(true);
-                    }
-                    else
-                        frag.setUserVisibleHint(true);
-
-                    childFm.popBackStack();
-
-                    return;
-                }
-
+                if (actionBar != null)
+                    actionBar.setTitle(appTitles[i].peek());
             }
-        }*/
 
-        int index = (fm.getBackStackEntryCount() > 1) ? fm.getBackStackEntryCount() : 0;
-        Fragment frag = fm.getFragments().get(index);
-        frag.setUserVisibleHint(true);
+            @Override
+            public void onPageSelected(int i) {
+            }
 
-        super.onBackPressed();
+            @Override
+            public void onPageScrollStateChanged(int i) {
+            }
+        });
+
+        mViewPager.setCurrentItem(2);
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
+
+    public ActionBar getsupportactionbar() {
+        ActionBar mActionBar = getSupportActionBar();
+        return mActionBar;
+    }
+    public void setTitle(String title){
+        ActionBar mActionBar = getSupportActionBar();
+        mActionBar.setTitle(title);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+
+        BackPressListener currentFragment = (BackPressListener) mSectionsPagerAdapter.getRegisteredFragment(mViewPager.getCurrentItem());
+
+        if (currentFragment != null) {
+            currentFragment.onBackPressed();
+
+            if (appTitles[currentPage].size() > 1)
+                appTitles[currentPage].pop();
+
+            setTitle(appTitles[currentPage].peek());
+
+        }
+
+    }
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
+        SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
 
         @Override
         public Fragment getItem(int position) {
+            FragmentRoot root = new FragmentRoot();
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    return new stationList();
+
+                    return new FragmentJourneyPlanner();
                 case 1:
-                    return new Favourites();
+
+                    return new FragmentStationList();
                 case 2:
-                    return new Twitter();
+
+                    return new FragmentFavourites();
+                case 3:
+
+                    return new FragmentTwitter();
+                case 4:
+
+                    return new FragmentMaps();
                 default:
                     return null;
             }
@@ -138,21 +151,23 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public int getCount() {
             // Show 2 total pages.
-            return 3;
+            return 5;
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Stations";
-                case 1:
-                    return "Favourites";
-                case 2:
-                    return "Twitter";
-                default:
-                    return null;
-            }
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            registeredFragments.put(position, fragment);
+            return fragment;
+        }
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            registeredFragments.remove(position);
+            super.destroyItem(container, position, object);
+        }
+
+        public Fragment getRegisteredFragment(int position) {
+            return registeredFragments.get(position);
         }
 
     }
